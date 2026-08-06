@@ -6,7 +6,7 @@ import { PawCursor } from '@/components/paw-cursor'
 
 export default function LabPage() {
   return (
-    <main className="relative flex min-h-screen flex-col overflow-hidden px-6 py-20">
+    <main className="relative flex h-screen max-h-screen min-h-screen flex-col justify-between overflow-hidden px-6 py-6 sm:py-10">
       <PawCursor />
       {/* back button */}
       <div className="mx-auto w-full max-w-6xl">

@@ -1,0 +1,8 @@
+{
+  "name": "kittycats",
+  "description": "The links and pixel pet builder of kittycats — GitHub, Discord, Roblox, NameMC, and more.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

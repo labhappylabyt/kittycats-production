@@ -28,32 +28,29 @@ export type Accessory =
 
 const INK = '#2f2a44'
 
-// Grid is 16 wide × 18 tall. Rows 0-1 reserved for hats (padding).
-// Cat occupies rows 2-17. Center column = x 8.
-//
-// Legend: '#' = body, '.' = empty
+// Grid is strictly 16 wide x 18 tall. Each row MUST be exactly 16 characters.
 const GRID = [
-  '................', // 0  (hat padding)
-  '................', // 1  (hat padding)
-  '.....##..##.....', // 2  ear tips
-  '....####..####....', // 3  ear outer
-  '...######..######...', // 4  ears
-  '..############..', // 5  head top
-  '..############..', // 6  head
-  '..############..', // 7  eye row
-  '..############..', // 8  head
-  '..############..', // 9  head
-  '..############..', // 10 chin/neck
-  '.##############.', // 11 shoulders
-  '.##############.', // 12 body
-  '.##############.', // 13 body
-  '.##############.', // 14 body
-  '..############..', // 15 body narrows
-  '...######.......', // 16 front legs
-  '...######.......', // 17 front legs/paws
+  '................', // 0: hat space
+  '................', // 1: hat space
+  '...##......##...', // 2: Ear tips (x=3,4 and x=11,12)
+  '..####....####..', // 3: Ears (x=2..5 and x=10..13)
+  '..####....####..', // 4: Ears (x=2..5 and x=10..13)
+  '..############..', // 5: Head top (x=2..13)
+  '..############..', // 6: Head upper (x=2..13)
+  '..############..', // 7: Eye row (x=2..13)
+  '..############..', // 8: Nose row (x=2..13)
+  '..############..', // 9: Mouth row (x=2..13)
+  '..############..', // 10: Chin/neck (x=2..13)
+  '.##############.', // 11: Shoulders (x=1..14)
+  '.##############.', // 12: Body (x=1..14)
+  '.##############.', // 13: Body (x=1..14)
+  '.##############.', // 14: Body (x=1..14)
+  '.##############.', // 15: Lower body (x=1..14)
+  '..####....####..', // 16: Front paws (x=2..5 and x=10..13)
+  '..####....####..', // 17: Paws bottom (x=2..5 and x=10..13)
 ]
 
-const CELL = 7
+const CELL = 12
 const W = 16
 const H = 18
 
@@ -61,67 +58,40 @@ function isBody(x: number, y: number) {
   return GRID[y]?.[x] === '#'
 }
 
-// Belly/chest — lighter color in the center of the body.
 function isBelly(x: number, y: number) {
-  return isBody(x, y) && y >= 11 && y <= 14 && x >= 5 && x <= 9
+  return isBody(x, y) && y >= 11 && y <= 15 && x >= 5 && x <= 10
 }
 
-// Calico patches.
 const CALICO_PATCHES: Array<[number, number]> = [
-  [3, 4],
-  [4, 4],
-  [11, 4],
-  [12, 4],
   [3, 5],
   [4, 5],
-  [10, 5],
   [11, 5],
   [12, 5],
-  [9, 6],
-  [10, 6],
-  [5, 11],
-  [6, 11],
-  [9, 11],
-  [10, 11],
-  [4, 12],
-  [5, 12],
-  [10, 12],
-  [11, 12],
+  [2, 12],
+  [3, 12],
+  [12, 13],
+  [13, 13],
 ]
 
-// Whiskers — thin lines extending outward from cheeks.
+// Whiskers (extending outside cheeks)
 const WHISKERS: Array<[number, number]> = [
-  // Left side whiskers
-  [1, 9],
-  [2, 9],
-  [3, 9],
   [0, 8],
   [1, 8],
-  [2, 8],
   [0, 10],
   [1, 10],
-  [2, 10],
-  // Right side whiskers
-  [12, 9],
-  [13, 9],
-  [14, 9],
-  [15, 8],
   [14, 8],
-  [13, 8],
-  [15, 10],
+  [15, 8],
   [14, 10],
-  [13, 10],
+  [15, 10],
 ]
 
-// Tail — curved tail extending from the back.
+// Tail
 const TAIL: Array<[number, number]> = [
+  [14, 12],
+  [15, 11],
   [15, 10],
   [15, 9],
-  [16, 8],
-  [16, 7],
-  [15, 6],
-  [14, 5],
-  [13, 4],
+  [14, 8],
 ]
 
 export function PixelPet({
@@ -157,72 +127,66 @@ export function PixelPet({
 
   const calico = fur.id === 'calico'
 
-  // Eyes: [x, y, w, h] — positioned on row 7
-  let eyes: Array<[number, number, number, number]> = []
+  // Eyes: row 7
+  const eyes: Array<[number, number, number, number]> = []
   if (expression === 'happy') {
-    eyes = [
-      [5, 7, 1, 1],
-      [10, 7, 1, 1],
-    ]
+    eyes.push([4, 7, 2, 1], [10, 7, 2, 1])
   } else if (expression === 'sleepy') {
-    eyes = [
-      [5, 7, 2, 1],
-      [9, 7, 2, 1],
-    ]
+    eyes.push([4, 7, 2, 1], [10, 7, 2, 1])
   } else if (expression === 'wink') {
-    eyes = [
-      [5, 7, 1, 1],
-      [9, 7, 2, 1],
-    ]
-  } else if (expression === 'glasses') {
-    eyes = [
-      [5, 7, 1, 1],
-      [10, 7, 1, 1],
-    ]
+    eyes.push([4, 7, 2, 1], [10, 7, 2, 1])
+  } else {
+    eyes.push([4, 7, 2, 1], [10, 7, 2, 1])
   }
 
-  // 'w' cat mouth — three pixels at row 9, center
-  const mouth: Array<[number, number]> = [
-    [6, 9],
-    [8, 9],
-    [10, 9],
+  // Nose: row 8
+  const nose: Array<[number, number]> = [
+    [7, 8],
+    [8, 8],
   ]
 
-  // Pink button nose — row 8, center
-  const nose: Array<[number, number]> = [[7, 8], [8, 8]]
+  // Mouth: row 9-10
+  const mouth: Array<[number, number]> = [
+    [6, 9],
+    [7, 10],
+    [8, 10],
+    [9, 9],
+  ]
 
   return (
     <svg
       viewBox={`0 0 ${W * CELL} ${H * CELL}`}
       className={className}
-      style={{ shapeRendering: 'crispEdges', ...style }}
+      style={{
+        shapeRendering: 'crispEdges',
+        imageRendering: 'pixelated',
+        ...style,
+      }}
       role="img"
       aria-label="A pixel-art kitty pet"
     >
-      {/* Layer 1: Heart aura (behind everything) */}
+      {/* Layer 1: Heart aura */}
       {accessories.has('heartAura') && <HeartAura />}
 
-      {/* Layer 2: Tail (behind body) */}
+      {/* Layer 2: Tail */}
       {TAIL.map(([x, y], i) => (
-        <rect
-          key={`tail-${i}`}
-          x={x * CELL}
-          y={y * CELL}
-          width={CELL}
-          height={CELL}
-          fill={fur.body}
-        />
-      ))}
-      {TAIL.map(([x, y], i) => (
-        <rect
-          key={`tail-o-${i}`}
-          x={x * CELL}
-          y={y * CELL}
-          width={CELL}
-          height={CELL}
-          fill={INK}
-          opacity={0.85}
-        />
+        <g key={`tail-${i}`}>
+          <rect
+            x={x * CELL}
+            y={y * CELL}
+            width={CELL}
+            height={CELL}
+            fill={fur.body}
+          />
+          <rect
+            x={x * CELL}
+            y={y * CELL}
+            width={CELL}
+            height={CELL}
+            fill={INK}
+            opacity={0.3}
+          />
+        </g>
       ))}
 
       {/* Layer 3: Body fill */}
@@ -246,7 +210,6 @@ export function PixelPet({
           fill={fur.belly}
         />
       ))}
-      {/* Calico patches */}
       {calico &&
         CALICO_PATCHES.map(([x, y]) => (
           <rect
@@ -256,9 +219,10 @@ export function PixelPet({
             width={CELL}
             height={CELL}
             fill={INK}
-            opacity={0.3}
+            opacity={0.25}
           />
         ))}
+
       {/* Body outline */}
       {outline.map(([x, y]) => (
         <rect
@@ -271,9 +235,11 @@ export function PixelPet({
         />
       ))}
 
-      {/* Layer 4: Inner ear pink */}
-      <rect x={4 * CELL} y={4 * CELL} width={CELL} height={CELL} fill="#ff9ecb" />
-      <rect x={11 * CELL} y={4 * CELL} width={CELL} height={CELL} fill="#ff9ecb" />
+      {/* Layer 4: Inner ears */}
+      <rect x={3 * CELL} y={3 * CELL} width={CELL} height={CELL} fill="#ff9ecb" />
+      <rect x={3 * CELL} y={4 * CELL} width={CELL} height={CELL} fill="#ff9ecb" />
+      <rect x={12 * CELL} y={3 * CELL} width={CELL} height={CELL} fill="#ff9ecb" />
+      <rect x={12 * CELL} y={4 * CELL} width={CELL} height={CELL} fill="#ff9ecb" />
 
       {/* Layer 5: Whiskers */}
       {WHISKERS.map(([x, y], i) => (
@@ -284,21 +250,37 @@ export function PixelPet({
           width={CELL}
           height={CELL}
           fill={INK}
-          opacity={0.6}
         />
       ))}
 
-      {/* Layer 6: Face */}
-      {eyes.map(([x, y, w, h], i) => (
-        <rect
-          key={`e-${i}`}
-          x={x * CELL}
-          y={y * CELL}
-          width={w * CELL}
-          height={h * CELL}
-          fill={INK}
-        />
-      ))}
+      {/* Layer 6: Eyes */}
+      {expression === 'wink' ? (
+        <>
+          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
+          <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
+          <rect x={10 * CELL} y={6 * CELL} width={2 * CELL} height={CELL} fill={fur.body} />
+        </>
+      ) : expression === 'sleepy' ? (
+        <>
+          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
+          <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
+          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={CELL / 2} fill={fur.body} />
+          <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={CELL / 2} fill={fur.body} />
+        </>
+      ) : (
+        eyes.map(([x, y, w, h], i) => (
+          <rect
+            key={`e-${i}`}
+            x={x * CELL}
+            y={y * CELL}
+            width={w * CELL}
+            height={h * CELL}
+            fill={INK}
+          />
+        ))
+      )}
+
+      {/* Nose */}
       {nose.map(([x, y]) => (
         <rect
           key={`n-${x}-${y}`}
@@ -309,6 +291,8 @@ export function PixelPet({
           fill="#ff7aa8"
         />
       ))}
+
+      {/* Mouth */}
       {mouth.map(([x, y]) => (
         <rect
           key={`m-${x}-${y}`}
@@ -320,7 +304,7 @@ export function PixelPet({
         />
       ))}
 
-      {/* Layer 7: Accessories */}
+      {/* Accessories */}
       {accessories.has('glasses') && <Glasses />}
       {accessories.has('bowtie') && <Bowtie />}
       {accessories.has('partyHat') && <PartyHat />}
@@ -331,32 +315,58 @@ export function PixelPet({
   )
 }
 
-// Glasses: aligned over eye row (row 7), lenses span the eyes.
 function Glasses() {
   return (
     <g>
-      <rect x={4 * CELL} y={7 * CELL - 1} width={3 * CELL} height={2 * CELL + 2} fill="none" stroke={INK} strokeWidth={2} />
-      <rect x={4 * CELL} y={7 * CELL - 1} width={3 * CELL} height={CELL} fill="#b8e0ff" opacity={0.45} />
-      <rect x={9 * CELL} y={7 * CELL - 1} width={3 * CELL} height={2 * CELL + 2} fill="none" stroke={INK} strokeWidth={2} />
-      <rect x={9 * CELL} y={7 * CELL - 1} width={3 * CELL} height={CELL} fill="#b8e0ff" opacity={0.45} />
+      <rect
+        x={3 * CELL}
+        y={6 * CELL}
+        width={4 * CELL}
+        height={2 * CELL}
+        fill="none"
+        stroke={INK}
+        strokeWidth={2}
+      />
+      <rect
+        x={3 * CELL}
+        y={6 * CELL}
+        width={4 * CELL}
+        height={2 * CELL}
+        fill="#b8e0ff"
+        opacity={0.35}
+      />
+      <rect
+        x={9 * CELL}
+        y={6 * CELL}
+        width={4 * CELL}
+        height={2 * CELL}
+        fill="none"
+        stroke={INK}
+        strokeWidth={2}
+      />
+      <rect
+        x={9 * CELL}
+        y={6 * CELL}
+        width={4 * CELL}
+        height={2 * CELL}
+        fill="#b8e0ff"
+        opacity={0.35}
+      />
       <rect x={7 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
     </g>
   )
 }
 
-// Bowtie: sits right below the chin (row 10), between the front paws.
 function Bowtie() {
   return (
     <g>
-      <rect x={5 * CELL} y={10 * CELL} width={2 * CELL} height={2 * CELL} fill="#ff6f91" />
-      <rect x={9 * CELL} y={10 * CELL} width={2 * CELL} height={2 * CELL} fill="#ff6f91" />
-      <rect x={7 * CELL} y={10 * CELL} width={2 * CELL} height={2 * CELL} fill="#ff6f91" />
-      <rect x={7 * CELL} y={10 * CELL} width={2 * CELL} height={2 * CELL} fill={INK} opacity={0.35} />
+      <rect x={5 * CELL} y={11 * CELL} width={2 * CELL} height={2 * CELL} fill="#ff6f91" />
+      <rect x={9 * CELL} y={11 * CELL} width={2 * CELL} height={2 * CELL} fill="#ff6f91" />
+      <rect x={7 * CELL} y={11 * CELL} width={2 * CELL} height={2 * CELL} fill="#2f2a44" />
     </g>
   )
 }
 
-// Party Hat: sits ON TOP of the head, between the ears (rows 0-4).
 function PartyHat() {
   return (
     <g>
@@ -367,71 +377,55 @@ function PartyHat() {
         strokeWidth={2}
       />
       <rect x={5 * CELL} y={3 * CELL} width={6 * CELL} height={CELL} fill="#ff6f91" />
-      <rect x={5 * CELL} y={3 * CELL} width={6 * CELL} height={CELL} fill="none" stroke={INK} strokeWidth={1.5} />
-      <rect x={7 * CELL} y={0} width={2 * CELL} height={CELL} fill="#fff" stroke={INK} strokeWidth={1} />
+      <rect x={7 * CELL} y={0} width={2 * CELL} height={CELL} fill="#fff" />
     </g>
   )
 }
 
-// Wizard Cap: sits ON TOP of the head, between the ears (rows 0-4).
 function WizardCap() {
   return (
     <g>
       <polygon
-        points={`${8 * CELL},${0} ${5 * CELL},${4 * CELL} ${11 * CELL},${4 * CELL}`}
+        points={`${8 * CELL},${0} ${4 * CELL},${4 * CELL} ${12 * CELL},${4 * CELL}`}
         fill="#7b68c4"
         stroke={INK}
         strokeWidth={2}
       />
-      <rect x={4 * CELL} y={4 * CELL} width={8 * CELL} height={CELL} fill={INK} />
-      <rect x={7 * CELL} y={2 * CELL} width={CELL} height={CELL} fill="#ffd700" />
-      <rect x={9 * CELL} y={1 * CELL} width={CELL} height={CELL} fill="#ffd700" />
+      <rect x={3 * CELL} y={4 * CELL} width={10 * CELL} height={CELL} fill={INK} />
+      <rect x={7 * CELL} y={2 * CELL} width={2 * CELL} height={CELL} fill="#ffd700" />
     </g>
   )
 }
 
-// Fish Treat: a tiny pixel fish floating to the left of the cat.
 function FishTreat() {
   return (
-    <g transform={`translate(${0}, ${13 * CELL})`}>
-      {/* Fish body */}
+    <g transform={`translate(${0}, ${12 * CELL})`}>
       <rect x={0} y={CELL} width={3 * CELL} height={CELL} fill="#7ec8e3" />
       <rect x={CELL} y={0} width={CELL} height={CELL} fill="#7ec8e3" />
       <rect x={CELL} y={2 * CELL} width={CELL} height={CELL} fill="#7ec8e3" />
-      {/* Tail */}
       <rect x={3 * CELL} y={0} width={CELL} height={CELL} fill="#7ec8e3" />
       <rect x={3 * CELL} y={2 * CELL} width={CELL} height={CELL} fill="#7ec8e3" />
-      {/* Eye */}
-      <rect x={0} y={CELL} width={CELL} height={CELL} fill={INK} opacity={0.7} />
-      {/* Outline */}
-      <rect x={0} y={CELL} width={1} height={CELL} fill={INK} opacity={0.5} />
+      <rect x={0} y={CELL} width={CELL} height={CELL} fill={INK} opacity={0.8} />
     </g>
   )
 }
 
-// Catnip Ball: a little green ball with a leaf, floating to the right.
 function CatnipBall() {
   return (
-    <g transform={`translate(${13 * CELL}, ${12 * CELL})`}>
-      {/* Ball */}
+    <g transform={`translate(${12 * CELL}, ${12 * CELL})`}>
       <rect x={0} y={CELL} width={2 * CELL} height={2 * CELL} fill="#bdecd0" />
       <rect x={0} y={CELL} width={2 * CELL} height={2 * CELL} fill="none" stroke={INK} strokeWidth={1.5} />
-      {/* Leaf */}
       <rect x={CELL} y={0} width={CELL} height={CELL} fill="#7fc99a" />
-      <rect x={CELL} y={0} width={CELL} height={CELL} fill="none" stroke={INK} strokeWidth={1} />
-      {/* Sparkle */}
-      <rect x={0} y={CELL} width={CELL} height={CELL} fill="#fff" opacity={0.4} />
     </g>
   )
 }
 
-// Heart Aura: rendered behind the cat, surrounding it with pixel hearts.
 function HeartAura() {
   const hearts: Array<[number, number, string]> = [
-    [0, 6, '#ff9ecb'],
-    [14, 5, '#ffc4e1'],
-    [-1, 11, '#ffb6d5'],
-    [15, 12, '#ff9ecb'],
+    [0, 5, '#ff9ecb'],
+    [14, 4, '#ffc4e1'],
+    [0, 11, '#ffb6d5'],
+    [14, 12, '#ff9ecb'],
     [7, 0, '#ffd0e6'],
     [8, 16, '#ff9ecb'],
   ]

@@ -19,19 +19,26 @@ export function PawCursor() {
     const paw = pawRef.current
     if (!container || !paw) return
 
-    let mx = window.innerWidth / 2
-    let my = window.innerHeight / 2
-    let px = mx
-    let py = my
+    let mx = -100
+    let my = -100
+    let px = -100
+    let py = -100
+    let initialized = false
     let raf = 0
     const sparkles: Sparkle[] = []
     let lastSpawn = 0
-    let lastX = mx
-    let lastY = my
+    let lastX = -100
+    let lastY = -100
 
     const onMove = (e: MouseEvent) => {
       mx = e.clientX
       my = e.clientY
+      if (!initialized) {
+        px = mx
+        py = my
+        initialized = true
+      }
+      paw.style.opacity = '1'
       const now = performance.now()
       const dist = Math.hypot(mx - lastX, my - lastY)
       if (now - lastSpawn > 60 && dist > 6) {
@@ -42,9 +49,17 @@ export function PawCursor() {
       }
     }
 
+    const onLeave = () => {
+      paw.style.opacity = '0'
+    }
+
+    const onEnter = () => {
+      paw.style.opacity = '1'
+    }
+
     const spawnSparkle = (x: number, y: number) => {
       const el = document.createElement('div')
-      el.className = 'paw-sparkle'
+      el.className = 'paw-sparkle pointer-events-none'
       el.style.left = `${x + (Math.random() * 12 - 6)}px`
       el.style.top = `${y + (Math.random() * 12 - 6)}px`
       const colors = ['#ff9ecb', '#ffd166', '#bdecd0', '#c4d4ff', '#fff7c2']
@@ -61,16 +76,20 @@ export function PawCursor() {
       paw.style.transform = 'translate(-50%, -50%) scale(1)'
     }
 
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('mousedown', onDown)
-    window.addEventListener('mouseup', onUp)
+    window.addEventListener('mousemove', onMove, { passive: true })
+    window.addEventListener('mousedown', onDown, { passive: true })
+    window.addEventListener('mouseup', onUp, { passive: true })
+    document.documentElement.addEventListener('mouseleave', onLeave, { passive: true })
+    document.documentElement.addEventListener('mouseenter', onEnter, { passive: true })
 
     const render = () => {
-      // ease paw toward cursor
-      px += (mx - px) * 0.22
-      py += (my - py) * 0.22
-      paw.style.left = `${px}px`
-      paw.style.top = `${py}px`
+      if (initialized) {
+        // smooth lerp
+        px += (mx - px) * 0.35
+        py += (my - py) * 0.35
+        paw.style.left = `${px}px`
+        paw.style.top = `${py}px`
+      }
 
       // fade sparkles
       for (let i = sparkles.length - 1; i >= 0; i--) {
@@ -93,6 +112,8 @@ export function PawCursor() {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mousedown', onDown)
       window.removeEventListener('mouseup', onUp)
+      document.documentElement.removeEventListener('mouseleave', onLeave)
+      document.documentElement.removeEventListener('mouseenter', onEnter)
       sparkles.forEach((s) => s.el.remove())
     }
   }, [])

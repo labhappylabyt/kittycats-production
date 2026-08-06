@@ -3,36 +3,96 @@
 import { useEffect, useRef, useState } from 'react'
 import { socials, type Social } from './socials'
 
-// Duplicated array for seamless loop: [original, original]
-// CSS marquee will translate from 0% to -50% (half the total width)
-const DECK: Social[] = [...socials, ...socials]
+// 4 duplicated sets for completely seamless wrapping
+const DECK: Social[] = [...socials, ...socials, ...socials, ...socials]
 
-const CARD_W = 256 // w-64
-const CARD_H = 352 // h-88
+const CARD_W = 256
+const CARD_H = 352
 const GAP = 24
+const ITEM_W = CARD_W + GAP
+const SINGLE_SET_W = socials.length * ITEM_W
 
 export function CardDeck() {
-  const [paused, setPaused] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
+  const offsetRef = useRef(0)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const isDraggingRef = useRef(false)
+  const startXRef = useRef(0)
+  const startOffsetRef = useRef(0)
+
+  useEffect(() => {
+    let rafId: number
+
+    const tick = () => {
+      if (!isPaused && !isDraggingRef.current) {
+        offsetRef.current += 0.8 // gentle continuous drift
+      }
+
+      // Keep offset in [0, SINGLE_SET_W)
+      offsetRef.current =
+        ((offsetRef.current % SINGLE_SET_W) + SINGLE_SET_W) % SINGLE_SET_W
+
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`
+      }
+
+      rafId = requestAnimationFrame(tick)
+    }
+
+    rafId = requestAnimationFrame(tick)
+
+    // Override page vertical scroll on wheel event
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+      offsetRef.current += delta * 1.5
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false })
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      window.removeEventListener('wheel', onWheel)
+    }
+  }, [isPaused])
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    isDraggingRef.current = true
+    startXRef.current = e.clientX
+    startOffsetRef.current = offsetRef.current
+  }
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDraggingRef.current) return
+    const dx = startXRef.current - e.clientX
+    offsetRef.current = startOffsetRef.current + dx
+  }
+
+  const handlePointerUp = () => {
+    isDraggingRef.current = false
+  }
 
   return (
     <div
-      className="relative w-full overflow-hidden"
-      style={{ height: CARD_H + 64 }}
+      className="relative w-full overflow-hidden py-6 cursor-grab active:cursor-grabbing select-none"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
     >
-      {/* Track: runs the CSS marquee animation */}
       <div
-        className="absolute inset-0 flex items-center"
+        ref={trackRef}
+        className="flex items-center py-4"
         style={{
+          width: 'max-content',
           willChange: 'transform',
-          animation: 'marquee-scroll 30s linear infinite',
-          animationPlayState: paused ? 'paused' : 'running',
         }}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
       >
         {DECK.map((social, i) => {
           const { Icon } = social
-          const wave = i % 2 === 0 ? 'translate-y-4' : '-translate-y-4'
+          const wave = i % 2 === 0 ? 'translate-y-3' : '-translate-y-3'
           return (
             <div
               key={i}
@@ -43,6 +103,7 @@ export function CardDeck() {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                draggable={false}
                 aria-label={`${social.name} — ${social.handle}`}
                 className="group block h-full w-full"
               >
@@ -68,7 +129,7 @@ export function CardDeck() {
                     />
                   </span>
 
-                  <Icon className="mx-auto h-16 w-16" />
+                  <Icon className="mx-auto h-16 w-16 pointer-events-none" />
 
                   <span className="flex items-end justify-between">
                     <span className="flex flex-col">
