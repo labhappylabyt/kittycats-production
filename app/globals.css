@@ -249,13 +249,13 @@
   transform: translate(-50%, -50%) rotate(var(--rot));
 }
 
-/* Seamless marquee: translate from 0% to -33.333% (one of 3 copies), then loop */
+/* Seamless marquee: translate from 0% to -50% (one of 2 copies), then loop */
 @keyframes marquee-scroll {
   0% {
     transform: translate3d(0%, -50%, 0);
   }
   100% {
-    transform: translate3d(-33.333%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
   }
 }
 

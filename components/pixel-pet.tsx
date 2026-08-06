@@ -35,22 +35,22 @@ const INK = '#2f2a44'
 const GRID = [
   '................', // 0  (hat padding)
   '................', // 1  (hat padding)
-  '....##....##....', // 2  ear tips
-  '...####..####...', // 3  ear outer
-  '...####..####...', // 4  ears
+  '.....##..##.....', // 2  ear tips
+  '....####..####....', // 3  ear outer
+  '...######..######...', // 4  ears
   '..############..', // 5  head top
   '..############..', // 6  head
   '..############..', // 7  eye row
   '..############..', // 8  head
-  '..####....####..', // 9  cheeks (whisker area)
+  '..############..', // 9  head
   '..############..', // 10 chin/neck
-  '.##############.', // 11 body widens
-  '################', // 12 body
-  '################', // 13 body
-  '################', // 14 body
-  '.##############.', // 15 body narrows
-  '..#..######..#..', // 16 front paws
-  '..##..####..##..', // 17 paws bottom
+  '.##############.', // 11 shoulders
+  '.##############.', // 12 body
+  '.##############.', // 13 body
+  '.##############.', // 14 body
+  '..############..', // 15 body narrows
+  '...######.......', // 16 front legs
+  '...######.......', // 17 front legs/paws
 ]
 
 const CELL = 7
@@ -63,44 +63,65 @@ function isBody(x: number, y: number) {
 
 // Belly/chest — lighter color in the center of the body.
 function isBelly(x: number, y: number) {
-  return isBody(x, y) && y >= 11 && y <= 15 && x >= 5 && x <= 10
+  return isBody(x, y) && y >= 11 && y <= 14 && x >= 5 && x <= 9
 }
 
 // Calico patches.
 const CALICO_PATCHES: Array<[number, number]> = [
+  [3, 4],
+  [4, 4],
+  [11, 4],
+  [12, 4],
+  [3, 5],
   [4, 5],
-  [5, 5],
-  [4, 6],
-  [11, 6],
-  [11, 7],
-  [12, 7],
+  [10, 5],
+  [11, 5],
+  [12, 5],
+  [9, 6],
+  [10, 6],
+  [5, 11],
+  [6, 11],
+  [9, 11],
+  [10, 11],
   [4, 12],
-  [3, 13],
-  [12, 14],
+  [5, 12],
+  [10, 12],
+  [11, 12],
 ]
 
-// Whiskers — thin lines extending outward from cheeks (row 9).
+// Whiskers — thin lines extending outward from cheeks.
 const WHISKERS: Array<[number, number]> = [
+  // Left side whiskers
+  [1, 9],
+  [2, 9],
+  [3, 9],
   [0, 8],
   [1, 8],
   [2, 8],
   [0, 10],
   [1, 10],
-  [13, 8],
-  [14, 8],
+  [2, 10],
+  // Right side whiskers
+  [12, 9],
+  [13, 9],
+  [14, 9],
   [15, 8],
-  [14, 10],
+  [14, 8],
+  [13, 8],
   [15, 10],
+  [14, 10],
+  [13, 10],
 ]
 
-// Curled tail — peeks out on the right side, behind body.
+// Tail — curved tail extending from the back.
 const TAIL: Array<[number, number]> = [
-  [14, 13],
-  [15, 13],
-  [15, 14],
-  [15, 15],
-  [14, 15],
-  [13, 15],
+  [15, 10],
+  [15, 9],
+  [16, 8],
+  [16, 7],
+  [15, 6],
+  [14, 5],
+  [13, 4],
 ]
 
 export function PixelPet({
