@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { socials, type Social } from './socials'
 
 // 4 duplicated sets for completely seamless wrapping
@@ -13,7 +13,6 @@ const ITEM_W = CARD_W + GAP
 const SINGLE_SET_W = socials.length * ITEM_W
 
 export function CardDeck() {
-  const [isPaused, setIsPaused] = useState(false)
   const offsetRef = useRef(0)
   const trackRef = useRef<HTMLDivElement>(null)
   const isDraggingRef = useRef(false)
@@ -24,8 +23,8 @@ export function CardDeck() {
     let rafId: number
 
     const tick = () => {
-      if (!isPaused && !isDraggingRef.current) {
-        offsetRef.current += 0.8 // gentle continuous drift
+      if (!isDraggingRef.current) {
+        offsetRef.current += 0.2 // slower gentle continuous drift
       }
 
       // Keep offset in [0, SINGLE_SET_W)
@@ -54,7 +53,7 @@ export function CardDeck() {
       cancelAnimationFrame(rafId)
       window.removeEventListener('wheel', onWheel)
     }
-  }, [isPaused])
+  }, [])
 
   const handlePointerDown = (e: React.PointerEvent) => {
     isDraggingRef.current = true
@@ -87,8 +86,6 @@ export function CardDeck() {
           width: 'max-content',
           willChange: 'transform',
         }}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
       >
         {DECK.map((social, i) => {
           const { Icon } = social
@@ -96,8 +93,13 @@ export function CardDeck() {
           return (
             <div
               key={i}
-              className={`flex-shrink-0 ${wave}`}
-              style={{ width: CARD_W, height: CARD_H, marginRight: GAP }}
+              className={`flex-shrink-0 ${wave} animate-float`}
+              style={{ 
+                width: CARD_W, 
+                height: CARD_H, 
+                marginRight: GAP,
+                animationDelay: `${i * 0.1}s` 
+              }}
             >
               <a
                 href={social.href}

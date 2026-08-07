@@ -15,7 +15,7 @@ export const FUR_COLORS: FurColor[] = [
   { id: 'mint', label: 'Mint', body: '#bdecd0', belly: '#d6f5e3' },
 ]
 
-export type Expression = 'happy' | 'sleepy' | 'glasses' | 'wink'
+export type Expression = 'happy' | 'sleepy' | 'wink' | 'surprised'
 
 export type Accessory =
   | 'bowtie'
@@ -128,16 +128,7 @@ export function PixelPet({
   const calico = fur.id === 'calico'
 
   // Eyes: row 7
-  const eyes: Array<[number, number, number, number]> = []
-  if (expression === 'happy') {
-    eyes.push([4, 7, 2, 1], [10, 7, 2, 1])
-  } else if (expression === 'sleepy') {
-    eyes.push([4, 7, 2, 1], [10, 7, 2, 1])
-  } else if (expression === 'wink') {
-    eyes.push([4, 7, 2, 1], [10, 7, 2, 1])
-  } else {
-    eyes.push([4, 7, 2, 1], [10, 7, 2, 1])
-  }
+  // We draw the eyes directly in the return statement below.
 
   // Nose: row 8
   const nose: Array<[number, number]> = [
@@ -256,28 +247,30 @@ export function PixelPet({
       {/* Layer 6: Eyes */}
       {expression === 'wink' ? (
         <>
-          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
-          <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
-          <rect x={10 * CELL} y={6 * CELL} width={2 * CELL} height={CELL} fill={fur.body} />
+          {/* Left eye: open */}
+          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={1 * CELL} fill={INK} />
+          {/* Right eye: closed (wink) - a thin line at the bottom of the eye area */}
+          <rect x={10 * CELL} y={7 * CELL + 10} width={2 * CELL} height={2} fill={INK} />
         </>
       ) : expression === 'sleepy' ? (
         <>
-          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
-          <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
-          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={CELL / 2} fill={fur.body} />
-          <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={CELL / 2} fill={fur.body} />
+          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={1 * CELL} fill={INK} />
+          <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={1 * CELL} fill={INK} />
+          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={0.5 * CELL} fill={fur.body} />
+          <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={0.5 * CELL} fill={fur.body} />
+        </>
+      ) : expression === 'surprised' ? (
+        <>
+          {/* Surprised eyes: larger oval-like shapes (2x2 blocks) */}
+          <rect x={4 * CELL} y={6 * CELL} width={2 * CELL} height={2 * CELL} fill={INK} />
+          <rect x={10 * CELL} y={6 * CELL} width={2 * CELL} height={2 * CELL} fill={INK} />
         </>
       ) : (
-        eyes.map(([x, y, w, h], i) => (
-          <rect
-            key={`e-${i}`}
-            x={x * CELL}
-            y={y * CELL}
-            width={w * CELL}
-            height={h * CELL}
-            fill={INK}
-          />
-        ))
+        <>
+          {/* Default: happy eyes */}
+          <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={1 * CELL} fill={INK} />
+          <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={1 * CELL} fill={INK} />
+        </>
       )}
 
       {/* Nose */}

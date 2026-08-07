@@ -217,7 +217,7 @@ export function PetBuilder() {
                   style={{ background: f.body }}
                 />
                 {f.label}
-              </button>
+              }
             ))}
           </div>
         </ControlPanel>
@@ -238,7 +238,7 @@ export function PetBuilder() {
                 }`}
               >
                 {e.label}
-              </button>
+              }
             ))}
           </div>
         </ControlPanel>
@@ -260,7 +260,7 @@ export function PetBuilder() {
               >
                 <span aria-hidden="true">{a.emoji}</span>
                 {a.label}
-              </button>
+              }
             ))}
           </div>
         </ControlPanel>
@@ -276,12 +276,13 @@ export function PetBuilder() {
         <span className="transition-transform duration-200 group-hover:scale-110">
           Adopt Pet
         </span>
-        <span aria-hidden="true">🐾</span>
+        <span aria-hidden="true">���������🐾</span>
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-200 group-hover:opacity-100"
           style={{
-              boxShadow: '0 0 24px 4px rgba(255, 196, 225, 0.7), 0 0 48px 8px rgba(255, 196, 225, 0.4)'
+            boxShadow:
+              '0 0 24px 4px rgba(255, 196, 225, 0.7), 0 0 48px 8px rgba(255, 196, 225, 0.4),
           }}
         />
       </button>
