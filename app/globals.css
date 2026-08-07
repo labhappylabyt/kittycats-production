@@ -249,19 +249,18 @@
   transform: translate(-50%, -50%) rotate(var(--rot));
 }
 
-/* Seamless marquee: translate from 0% to -33.333% (one of 3 copies), then loop */
-@keyframes marquee-scroll {
+/* Seamless marquee: 2 copies, translate from 0% to -50% (one copy width), then loop */
+@keyframes marquee {
   0% {
-    transform: translate3d(0%, -50%, 0);
+    transform: translateX(0%);
   }
   100% {
-    transform: translate3d(-33.333%, -50%, 0);
+    transform: translateX(-50%);
   }
 }
 
-/* Staggered floating bob for lab deck cards — uses translate3d for GPU accel.
-   The -50% Y centering is NOT included here; the card's parent handles that.
-   This keyframe only bobs vertically so it won't fight the marquee. */
+/* Staggered floating bob for lab deck cards — bobs vertically only,
+   never conflicts with the marquee's horizontal transform. */
 @keyframes card-float {
   0%,
   100% {
@@ -273,6 +272,18 @@
 }
 .card-float {
   animation: card-float 3.5s ease-in-out infinite;
+}
+
+/* Hover glow: soft ambient glow beneath cards, tinted to the card's theme color.
+   Uses box-shadow transition (GPU-friendly) with a CSS var for per-card color. */
+.card-glow {
+  transition: box-shadow 0.3s ease-out;
+}
+.group:hover > .card-glow,
+a:hover .card-glow {
+  box-shadow:
+    6px 6px 0 0 var(--ink),
+    0 0 25px 0 var(--card-glow, rgba(255, 182, 193, 0.6));
 }
 
 /* Hide the native cursor on devices with a fine pointer */
@@ -298,12 +309,12 @@ svg[style*='pixelated'] {
     animation: none !important;
   }
   /* Slow the marquee way down rather than freezing it entirely */
-  @keyframes marquee-scroll {
+  @keyframes marquee {
     0% {
-      transform: translate3d(0%, -50%, 0);
+      transform: translateX(0%);
     }
     100% {
-      transform: translate3d(-33.333%, -50%, 0);
+      transform: translateX(-50%);
     }
   }
 }

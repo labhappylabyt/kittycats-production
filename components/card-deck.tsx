@@ -1,13 +1,9 @@
-'use client'
-
-import { useEffect, useRef, useState } from 'react'
 import { socials, type Social } from './socials'
 
-// 3 copies pre-mounted in one continuous flex row. CSS @keyframes drives
-// the base drift from 0% to -33.333% (exactly one copy), then loops.
-// A separate wrapper handles drag/wheel offset so it never conflicts with
-// the animation transform. Pure CSS = no React re-render lag.
-const COPIES = 3
+// 2 copies pre-mounted in one continuous flex row. CSS @keyframes marquee
+// translates from 0% to -50% (exactly one copy width), then loops seamlessly.
+// No JS event listeners — vertical page scrolling is never trapped.
+const COPIES = 2
 const DECK: Social[] = Array.from({ length: COPIES }, () => socials).flat()
 
 const CARD_W = 256
@@ -15,97 +11,18 @@ const CARD_H = 360
 const GAP = 24
 
 export function CardDeck() {
-  const wrapperRef = useRef<HTMLDivElement | null>(null)
-  const [paused, setPaused] = useState(false)
-  const dragRef = useRef({ dragging: false, startX: 0, startOffset: 0, offset: 0 })
-
-  // Apply drag/wheel offset to wrapper and decay it back to 0 via rAF.
-  useEffect(() => {
-    let raf = 0
-    const tick = () => {
-      const ds = dragRef.current
-      if (!ds.dragging && Math.abs(ds.offset) > 0.1) {
-        ds.offset *= 0.92
-      }
-      if (wrapperRef.current) {
-        wrapperRef.current.style.transform = `translate3d(${ds.offset.toFixed(1)}px, 0, 0)`
-      }
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [])
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current
-    if (!wrapper) return
-
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
-      dragRef.current.offset += delta * 0.6
-    }
-
-    const onPointerDown = (e: PointerEvent) => {
-      const ds = dragRef.current
-      ds.dragging = true
-      ds.startX = e.clientX
-      ds.startOffset = ds.offset
-      setPaused(true)
-      wrapper.setPointerCapture?.(e.pointerId)
-    }
-    const onPointerMove = (e: PointerEvent) => {
-      const ds = dragRef.current
-      if (!ds.dragging) return
-      ds.offset = ds.startOffset + (e.clientX - ds.startX)
-    }
-    const onPointerUp = (e: PointerEvent) => {
-      dragRef.current.dragging = false
-      setPaused(false)
-      wrapper.releasePointerCapture?.(e.pointerId)
-    }
-
-    wrapper.addEventListener('wheel', onWheel, { passive: false })
-    wrapper.addEventListener('pointerdown', onPointerDown)
-    wrapper.addEventListener('pointermove', onPointerMove)
-    wrapper.addEventListener('pointerup', onPointerUp)
-    wrapper.addEventListener('pointerleave', onPointerUp)
-
-    return () => {
-      wrapper.removeEventListener('wheel', onWheel)
-      wrapper.removeEventListener('pointerdown', onPointerDown)
-      wrapper.removeEventListener('pointermove', onPointerMove)
-      wrapper.removeEventListener('pointerup', onPointerUp)
-      wrapper.removeEventListener('pointerleave', onPointerUp)
-    }
-  }, [])
-
   return (
     <div
       className="relative w-full overflow-hidden py-16"
       style={{ height: CARD_H + 128 }}
     >
-      {/* Wrapper: handles drag/wheel offset (separate from animation) */}
-      <div
-        ref={wrapperRef}
-        className="absolute inset-0"
-        style={{
-          willChange: 'transform',
-          backfaceVisibility: 'hidden',
-          transform: 'translate3d(0,0,0)',
-        }}
-      >
-        {/* Track: runs the CSS marquee animation */}
+      <div className="flex h-full items-center">
         <div
-          className="absolute left-0 top-1/2 flex items-center"
+          className="flex w-max"
           style={{
             willChange: 'transform',
             backfaceVisibility: 'hidden',
-            width: 'max-content',
-            transform: 'translate3d(0, -50%, 0)',
-            animation: 'marquee-scroll 50s linear infinite',
-            animationPlayState: paused ? 'paused' : 'running',
+            animation: 'marquee 35s linear infinite',
           }}
         >
           {DECK.map((social, i) => {
@@ -115,8 +32,6 @@ export function CardDeck() {
                 key={i}
                 className="flex-shrink-0"
                 style={{ width: CARD_W, height: CARD_H, marginRight: GAP }}
-                onMouseEnter={() => setPaused(true)}
-                onMouseLeave={() => setPaused(false)}
               >
                 <a
                   href={social.href}
@@ -127,13 +42,14 @@ export function CardDeck() {
                   className="group block h-full w-full"
                 >
                   <span
-                    className="card-float relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border-4 p-6 transition-transform duration-200 group-hover:-translate-x-1 group-hover:-translate-y-1"
+                    className="card-float card-glow relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border-4 p-6 transition-transform duration-200 group-hover:-translate-x-1 group-hover:-translate-y-1"
                     style={{
                       background: social.color,
                       color: social.ink,
                       borderColor: social.ink,
                       boxShadow: '6px 6px 0 0 var(--ink)',
                       animationDelay: `${(i % socials.length) * 0.4}s`,
+                      ['--card-glow' as string]: `${social.color}cc`,
                     }}
                   >
                     <span className="flex items-center justify-between">
