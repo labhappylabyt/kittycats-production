@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import {
   FUR_COLORS,
   PixelPet,
@@ -27,26 +27,26 @@ const EXPRESSIONS: { id: Expression; label: string }[] = [
   { id: 'surprised', label: 'Surprised' },
 ]
 
-type Confetti = {
-  id: number
-  x: number
-  y: number
-  vx: number
-  vy: number
-  color: string
-  rot: number
-  shape: 'heart' | 'square'
-}
-
-const CONFETTI_COLORS = ['#ff9ecb', '#ffd166', '#bdecd0', '#c4d4ff', '#ffb877', '#d7c9ff']
+const CONFETTI_COLORS = [
+  '#ff9ecb',
+  '#ffd166',
+  '#bdecd0',
+  '#c4d4ff',
+  '#ffb877',
+  '#d7c9ff',
+]
 
 export function PetBuilder() {
   const [fur, setFur] = useState<FurColor>(FUR_COLORS[0])
   const [expression, setExpression] = useState<Expression>('happy')
   const [accessories, setAccessories] = useState<Set<Accessory>>(new Set())
-  const [confetti, setConfetti] = useState<Confetti[]>([])
-  const idRef = useRef(0)
   const stageRef = useRef<HTMLDivElement | null>(null)
+  const confettiLayerRef = useRef<HTMLDivElement | null>(null)
+  const confettiParticlesRef = useRef<
+    Map<number, { el: HTMLElement; x: number; y: number; vx: number; vy: number; rot: number }>
+  >(new Map())
+  const confettiIdRef = useRef(0)
+  const confettiRafRef = useRef<number | null>(null)
 
   const sfx = useCallback(() => {
     resumeAudio()
@@ -71,28 +71,81 @@ export function PetBuilder() {
     sfx()
   }
 
+  const spawnConfetti = () => {
+    const stage = stageRef.current
+    const layer = confettiLayerRef.current
+    if (!stage || !layer) return
+
+    const rect = stage.getBoundingClientRect()
+    const cx = rect.width / 2
+    const cy = rect.height / 2
+
+    for (let i = 0; i < 48; i++) {
+      const angle = (Math.PI * 2 * i) / 48 + Math.random() * 0.3
+      const speed = 2 + Math.random() * 4
+      const id = confettiIdRef.current++
+      const el = document.createElement('div')
+      el.style.position = 'absolute'
+      el.style.left = `${cx}px`
+      el.style.top = `${cy}px`
+      el.style.pointerEvents = 'none'
+      const isHeart = i % 3 === 0
+      if (isHeart) {
+        el.textContent = '♥'
+        el.style.fontSize = '18px'
+        el.style.color = CONFETTI_COLORS[i % CONFETTI_COLORS.length]
+      } else {
+        el.style.width = '8px'
+        el.style.height = '8px'
+        el.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length]
+      }
+      layer.appendChild(el)
+      confettiParticlesRef.current.set(id, {
+        el,
+        x: cx,
+        y: cy,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 2,
+        rot: Math.random() * 360,
+      })
+    }
+
+    if (confettiRafRef.current === null) {
+      const tick = () => {
+        const particles = confettiParticlesRef.current
+        if (particles.size === 0) {
+          confettiRafRef.current = null
+          return
+        }
+        particles.forEach((p, id) => {
+          p.x += p.vx
+          p.y += p.vy
+          p.vy += 0.18
+          p.rot += 8
+          p.el.style.transform = `translate(${p.x - parseFloat(p.el.style.left)}px, ${p.y - parseFloat(p.el.style.top)}px) rotate(${p.rot}deg)`
+          if (p.y > 600 || p.y < -200) {
+            p.el.remove()
+            particles.delete(id)
+          }
+        })
+        confettiRafRef.current = requestAnimationFrame(tick)
+      }
+      confettiRafRef.current = requestAnimationFrame(tick)
+    }
+  }
+
   const adopt = () => {
     playAdopt()
-    // Generate PNG from the current pet SVG
+    spawnConfetti()
+
     const stage = stageRef.current
     if (!stage) return
     const svg = stage.querySelector('svg')
     if (!svg) return
 
-    // Clone the SVG to avoid modifying the original
     const clonedSvg = svg.cloneNode(true) as SVGSVGElement
-    // Remove any external CSS dependencies by inlining the width and height attributes
-    // We'll set the width and height to the base size (16*12 x 18*12) without the Tailwind classes
-    // The PixelPet component uses a viewBox and we want to keep that.
-    // We'll set the width and height attributes to the desired size for the image.
-    // Let's set it to the exact size of the SVG content.
-    const width = Number(svg.getAttribute('width')?.replace('px', '') || svg.viewBox.baseVal.width)
-    const height = Number(svg.getAttribute('height')?.replace('px', '') || svg.viewBox.baseVal.height)
-    // If the SVG doesn't have width/height attributes, we can use the viewBox
-    if (!svg.hasAttribute('width') || !svg.hasAttribute('height')) {
-      clonedSvg.setAttribute('width', `${svg.viewBox.baseVal.width}`)
-      clonedSvg.setAttribute('height', `${svg.viewBox.baseVal.height}`)
-    }
+    clonedSvg.setAttribute('width', String(svg.viewBox.baseVal.width))
+    clonedSvg.setAttribute('height', String(svg.viewBox.baseVal.height))
 
     const svgString = new XMLSerializer().serializeToString(clonedSvg)
     const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
@@ -105,50 +158,21 @@ export function PetBuilder() {
       canvas.height = img.height
       const ctx = canvas.getContext('2d')
       if (!ctx) return
-      // Draw the image onto the canvas
       ctx.drawImage(img, 0, 0)
-      // Convert to PNG and trigger download
       canvas.toBlob((blob) => {
         if (!blob) return
         const downloadUrl = URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = downloadUrl
-        a.download = `my-adopted-kitty.png`
+        a.download = 'my-adopted-kitty.png'
         a.click()
         URL.revokeObjectURL(downloadUrl)
       }, 'image/png')
-      // Revoke the blob URL for the SVG image
       URL.revokeObjectURL(url)
     }
-    img.onerror = () => {
-      URL.revokeObjectURL(url)
-    }
+    img.onerror = () => URL.revokeObjectURL(url)
     img.src = url
   }
-
-  // animate confetti
-  useEffect(() => {
-    if (confetti.length === 0) return
-    let raf = 0
-    const tick = () => {
-      setConfetti((prev) => {
-        if (prev.length === 0) return prev
-        const next = prev
-          .map((c) => ({
-            ...c,
-            x: c.x + c.vx,
-            y: c.y + c.vy,
-            vy: c.vy + 0.18, // gravity
-            rot: c.rot + 8,
-          }))
-          .filter((c) => c.y < 600 && c.y > -200)
-        return next
-      })
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [confetti.length > 0]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex w-full max-w-3xl flex-col items-center gap-6">
@@ -157,34 +181,10 @@ export function PetBuilder() {
         ref={stageRef}
         className="relative flex h-56 w-56 items-center justify-center sm:h-64 sm:w-64"
       >
-        {/* confetti layer */}
-        <div className="pointer-events-none absolute inset-0 overflow-visible">
-          {confetti.map((c) => (
-            <div
-              key={c.id}
-              className="absolute"
-              style={{
-                left: c.x,
-                top: c.y,
-                transform: `rotate(${c.rot}deg)`,
-              }}
-            >
-              {c.shape === 'heart' ? (
-                <span style={{ fontSize: 18, color: c.color }}>♥</span>
-              ) : (
-                <span
-                  style={{
-                    display: 'block',
-                    width: 8,
-                    height: 8,
-                    background: c.color,
-                  }}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-
+        <div
+          ref={confettiLayerRef}
+          className="pointer-events-none absolute inset-0 overflow-visible"
+        />
         <div className="animate-pet-bounce">
           <PixelPet
             fur={fur}
@@ -197,7 +197,6 @@ export function PetBuilder() {
 
       {/* Controls */}
       <div className="grid w-full gap-4 sm:grid-cols-3">
-        {/* Fur */}
         <ControlPanel title="Fur Color">
           <div className="flex flex-wrap justify-center gap-2">
             {FUR_COLORS.map((f) => (
@@ -206,7 +205,7 @@ export function PetBuilder() {
                 type="button"
                 onClick={() => pickFur(f)}
                 aria-pressed={fur.id === f.id}
-                className={`flex items-center gap-2 rounded-xl border-2 px-2.5 py-1.5 text-xs font-bold transition-transform hover:-translate-y-0.5 ${
+                className={`flex items-center gap-2 rounded-xl border-2 px-2.5 py-1.5 text-xs font-bold transition-transform duration-150 hover:-translate-y-0.5 ${
                   fur.id === f.id
                     ? 'border-foreground bg-card shadow-[2px_2px_0_0_var(--ink)]'
                     : 'border-transparent'
@@ -222,7 +221,6 @@ export function PetBuilder() {
           </div>
         </ControlPanel>
 
-        {/* Expression */}
         <ControlPanel title="Expression">
           <div className="flex flex-wrap justify-center gap-2">
             {EXPRESSIONS.map((e) => (
@@ -231,7 +229,7 @@ export function PetBuilder() {
                 type="button"
                 onClick={() => pickExpression(e.id)}
                 aria-pressed={expression === e.id}
-                className={`rounded-xl border-2 px-3 py-1.5 text-xs font-bold transition-transform hover:-translate-y-0.5 ${
+                className={`rounded-xl border-2 px-3 py-1.5 text-xs font-bold transition-transform duration-150 hover:-translate-y-0.5 ${
                   expression === e.id
                     ? 'border-foreground bg-card shadow-[2px_2px_0_0_var(--ink)]'
                     : 'border-transparent'
@@ -243,7 +241,6 @@ export function PetBuilder() {
           </div>
         </ControlPanel>
 
-        {/* Accessories */}
         <ControlPanel title="Accessories">
           <div className="flex flex-wrap justify-center gap-2">
             {ACCESSORIES.map((a) => (
@@ -252,7 +249,7 @@ export function PetBuilder() {
                 type="button"
                 onClick={() => toggleAccessory(a.id)}
                 aria-pressed={accessories.has(a.id)}
-                className={`flex items-center gap-1 rounded-xl border-2 px-2.5 py-1.5 text-xs font-bold transition-transform hover:-translate-y-0.5 ${
+                className={`flex items-center gap-1 rounded-xl border-2 px-2.5 py-1.5 text-xs font-bold transition-transform duration-150 hover:-translate-y-0.5 ${
                   accessories.has(a.id)
                     ? 'border-foreground bg-card shadow-[2px_2px_0_0_var(--ink)]'
                     : 'border-transparent'
@@ -281,7 +278,8 @@ export function PetBuilder() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-200 group-hover:opacity-100"
           style={{
-              boxShadow: '0 0 24px 4px rgba(255, 196, 225, 0.7), 0 0 48px 8px rgba(255, 196, 225, 0.4)'
+            boxShadow:
+              '0 0 24px 4px rgba(255, 196, 225, 0.7), 0 0 48px 8px rgba(255, 196, 225, 0.4)',
           }}
         />
       </button>
