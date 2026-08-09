@@ -9,9 +9,10 @@ const fredoka = Fredoka({
 })
 
 export const metadata: Metadata = {
-  title: 'kittycats',
-  description: 'The links of kittycats — GitHub, Discord, Roblox, NameMC, and more.',
-  generator: 'v0.app',
+  metadataBase: new URL('https://kittycats.cc'),
+  title: 'kittycats.cc — Pixel Pet Builder & Lab Deck',
+  description: 'Build your own pixel kitty, adopt it as a PNG, and explore my links across the web — GitHub, Discord, Roblox, NameMC, and more.',
+  generator: 'Bolt',
   icons: {
     icon: [
       {
@@ -28,6 +29,27 @@ export const metadata: Metadata = {
       },
     ],
     apple: '/apple-icon.png',
+  },
+  openGraph: {
+    title: 'kittycats.cc — Pixel Pet Builder & Lab Deck',
+    description: 'Build your own pixel kitty, adopt it as a PNG, and explore my links across the web.',
+    url: 'https://kittycats.cc',
+    siteName: 'kittycats.cc',
+    type: 'website',
+    images: [
+      {
+        url: '/placeholder.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'kittycats.cc Pixel Pet Builder',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'kittycats.cc — Pixel Pet Builder & Lab Deck',
+    description: 'Build your own pixel kitty, adopt it as a PNG, and explore my links across the web.',
+    images: ['/placeholder.jpg'],
   },
 }
 

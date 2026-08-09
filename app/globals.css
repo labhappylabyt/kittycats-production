@@ -293,6 +293,16 @@ a:hover .card-glow {
   }
 }
 
+/* Focus-visible: visible outline for keyboard navigation */
+*:focus-visible {
+  outline: 3px solid var(--accent, #ffc4e1);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* Pixel rendering: enforce crisp edges on all SVG/pixel containers */
 svg[style*='crisp-edges'],
 svg[style*='pixelated'] {
