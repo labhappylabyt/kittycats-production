@@ -7,6 +7,7 @@
 @theme inline {
   --font-sans: var(--font-fredoka), ui-rounded, system-ui, sans-serif;
   --font-mono: var(--font-fredoka), ui-rounded, system-ui, sans-serif;
+  --font-pixel: var(--font-pixel), 'Silkscreen', monospace;
   --color-ink: var(--ink);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -161,13 +162,28 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
   body {
     @apply bg-background text-foreground;
-    /* Pastel pixel dot grid on a clean cream background */
     background-color: #fdfbf7;
     background-image: radial-gradient(#eecce0 1px, transparent 1px);
     background-size: 20px 20px;
   }
+}
+
+/* Hide scrollbar for clean full-viewport layout — scroll still works via Lenis */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 /* Typewriter blinking cursor */

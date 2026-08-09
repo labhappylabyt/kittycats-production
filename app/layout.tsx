@@ -1,11 +1,18 @@
 import type { Metadata, Viewport } from 'next'
-import { Fredoka } from 'next/font/google'
+import { Fredoka, Silkscreen } from 'next/font/google'
 import './globals.css'
 
 const fredoka = Fredoka({
   subsets: ['latin'],
   variable: '--font-fredoka',
   weight: ['400', '500', '600', '700'],
+})
+
+const silkscreen = Silkscreen({
+  subsets: ['latin'],
+  variable: '--font-pixel',
+  weight: ['400', '700'],
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -64,7 +71,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`light bg-background ${fredoka.variable}`}>
+    <html lang="en" className={`light bg-background ${fredoka.variable} ${silkscreen.variable}`}>
       <body className="relative antialiased font-sans">
         {children}
         <footer className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center pb-3">

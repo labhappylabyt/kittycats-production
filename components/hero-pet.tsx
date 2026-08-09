@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import {
   FUR_COLORS,
@@ -9,7 +9,7 @@ import {
   type Expression,
   type FurColor,
 } from './pixel-pet'
-import { playAdopt, playClick, playMeow, resumeAudio } from './sfx'
+import { playAdopt, playClick, playMeow, playPurr, resumeAudio } from './sfx'
 import { isMuted } from './sound-toggle'
 
 const ACCESSORIES: { id: Accessory; label: string; emoji: string }[] = [
@@ -38,6 +38,16 @@ const CONFETTI_COLORS = [
   '#d7c9ff',
 ]
 
+const PURR_COLORS = [
+  '#ff9ecb',
+  '#ffd166',
+  '#bdecd0',
+  '#c4d4ff',
+  '#d7c9ff',
+]
+
+type PetState = 'idle' | 'tracking' | 'clicked'
+
 export function HeroPet() {
   const [fur, setFur] = useState<FurColor>(FUR_COLORS[0])
   const [expression, setExpression] = useState<Expression>('happy')
@@ -46,12 +56,14 @@ export function HeroPet() {
 
   const stageRef = useRef<HTMLDivElement | null>(null)
   const petWrapRef = useRef<HTMLDivElement | null>(null)
+  const svgRef = useRef<SVGSVGElement | null>(null)
   const confettiLayerRef = useRef<HTMLDivElement | null>(null)
+  const purrLayerRef = useRef<HTMLDivElement | null>(null)
   const prevAccessoriesRef = useRef<Set<Accessory>>(new Set())
-  const accessoryElsRef = useRef<Map<string, HTMLElement>>(new Map())
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const stateRef = useRef<PetState>('idle')
 
-  // GSAP idle animations: gentle breathing float + periodic blink via expression swap
+  // GSAP idle breathing: gentle y-axis float
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const wrap = petWrapRef.current
@@ -67,6 +79,28 @@ export function HeroPet() {
 
     return () => {
       breathe.kill()
+    }
+  }, [])
+
+  // Tail wag: continuous rotation oscillation on the #pet-tail group
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const svg = svgRef.current
+    if (!svg) return
+    const tail = svg.querySelector('#pet-tail') as SVGGElement | null
+    if (!tail) return
+
+    const wag = gsap.to(tail, {
+      rotation: 8,
+      transformOrigin: 'left center',
+      duration: 1.8,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    })
+
+    return () => {
+      wag.kill()
     }
   }, [])
 
@@ -94,6 +128,36 @@ export function HeroPet() {
     }
   }, [])
 
+  // Cursor tracking: eyes subtly follow the mouse across the viewport
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const svg = svgRef.current
+    if (!svg) return
+    const eyes = svg.querySelector('#pet-eyes') as SVGGElement | null
+    if (!eyes) return
+
+    const onMove = (e: MouseEvent) => {
+      const rect = svg.getBoundingClientRect()
+      const cx = rect.left + rect.width / 2
+      const cy = rect.top + rect.height / 2
+      const dx = (e.clientX - cx) / rect.width
+      const dy = (e.clientY - cy) / rect.height
+      const maxShift = 2
+      const tx = Math.max(-maxShift, Math.min(maxShift, dx * maxShift))
+      const ty = Math.max(-maxShift, Math.min(maxShift, dy * maxShift))
+      gsap.to(eyes, {
+        x: tx,
+        y: ty,
+        duration: 0.3,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      })
+    }
+
+    window.addEventListener('mousemove', onMove)
+    return () => window.removeEventListener('mousemove', onMove)
+  }, [])
+
   // Spring physics on accessory changes: squash-and-stretch scale from 0 to 1
   useEffect(() => {
     const prev = prevAccessoriesRef.current
@@ -105,11 +169,13 @@ export function HeroPet() {
     })
 
     added.forEach((a) => {
-      const el = accessoryElsRef.current.get(a)
+      const svg = svgRef.current
+      if (!svg) return
+      const el = svg.querySelector(`[data-accessory="${a}"]`) as SVGElement | null
       if (!el) return
       gsap.fromTo(
         el,
-        { scale: 0, opacity: 0 },
+        { scale: 0, opacity: 0, transformOrigin: 'center center' },
         {
           scale: 1,
           opacity: 1,
@@ -121,6 +187,66 @@ export function HeroPet() {
 
     prevAccessoriesRef.current = new Set(current)
   }, [accessories])
+
+  // Purr particle burst: small hearts/sparks emanating from the cat
+  const spawnPurr = useCallback(() => {
+    const layer = purrLayerRef.current
+    if (!layer) return
+
+    const rect = layer.getBoundingClientRect()
+    const cx = rect.width / 2
+    const cy = rect.height / 2
+
+    for (let i = 0; i < 12; i++) {
+      const el = document.createElement('div')
+      el.style.position = 'absolute'
+      el.style.left = `${cx}px`
+      el.style.top = `${cy}px`
+      el.style.pointerEvents = 'none'
+      el.style.fontSize = '14px'
+      el.style.color = PURR_COLORS[i % PURR_COLORS.length]
+      el.textContent = i % 2 === 0 ? '♥' : '✦'
+      layer.appendChild(el)
+
+      const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.5
+      const dist = 30 + Math.random() * 40
+
+      gsap.to(el, {
+        x: Math.cos(angle) * dist,
+        y: Math.sin(angle) * dist - 20,
+        opacity: 0,
+        scale: 0.3,
+        duration: 0.8,
+        ease: 'power2.out',
+        onComplete: () => el.remove(),
+      })
+    }
+  }, [])
+
+  // Click reaction: soft bounce + purr sound + purr particles
+  const handlePetClick = useCallback(() => {
+    const wrap = petWrapRef.current
+    if (!wrap) return
+
+    stateRef.current = 'clicked'
+
+    // Squash-and-stretch bounce
+    gsap.timeline()
+      .to(wrap, { scaleY: 0.88, scaleX: 1.12, duration: 0.12, ease: 'power2.out' })
+      .to(wrap, { scaleY: 1.06, scaleX: 0.94, duration: 0.15, ease: 'power2.out' })
+      .to(wrap, { scale: 1, duration: 0.3, ease: 'back.out(1.7)' })
+
+    if (!isMuted()) {
+      resumeAudio()
+      playPurr()
+    }
+    spawnPurr()
+
+    // Return to idle after the bounce
+    setTimeout(() => {
+      stateRef.current = 'idle'
+    }, 600)
+  }, [spawnPurr])
 
   const playSound = () => {
     if (!isMuted()) {
@@ -219,12 +345,10 @@ export function HeroPet() {
     }
     spawnConfetti()
 
-    // Show toast
     setToast(true)
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
     toastTimerRef.current = setTimeout(() => setToast(false), 2500)
 
-    // Export 4x upscaled PNG
     const stage = stageRef.current
     if (!stage) return
     const svg = stage.querySelector('svg')
@@ -276,12 +400,18 @@ export function HeroPet() {
           ref={confettiLayerRef}
           className="pointer-events-none absolute inset-0 overflow-visible"
         />
+        <div
+          ref={purrLayerRef}
+          className="pointer-events-none absolute inset-0 overflow-visible"
+        />
         <div ref={petWrapRef}>
           <PixelPet
+            ref={svgRef}
             fur={fur}
             expression={expression}
             accessories={accessories}
             className="h-44 w-44 drop-shadow-[4px_4px_0_0_#2f2a44] sm:h-52 sm:w-52"
+            onPetClick={handlePetClick}
           />
         </div>
       </div>

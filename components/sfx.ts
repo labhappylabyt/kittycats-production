@@ -79,3 +79,30 @@ export function playAdopt() {
   const notes = [523.25, 659.25, 783.99, 1046.5] // C5 E5 G5 C6
   notes.forEach((f, i) => tone(f, i * 0.09, 0.18, 'triangle', 0.12))
 }
+
+// Soft purr: low-frequency rumble with slight vibrato.
+export function playPurr() {
+  const ac = getCtx()
+  if (!ac) return
+  resumeAudio()
+  const osc = ac.createOscillator()
+  const gain = ac.createGain()
+  const lfo = ac.createOscillator()
+  const lfoGain = ac.createGain()
+  osc.type = 'sawtooth'
+  osc.frequency.value = 60
+  lfo.type = 'sine'
+  lfo.frequency.value = 18
+  lfoGain.gain.value = 8
+  lfo.connect(lfoGain)
+  lfoGain.connect(osc.frequency)
+  gain.gain.setValueAtTime(0, ac.currentTime)
+  gain.gain.linearRampToValueAtTime(0.06, ac.currentTime + 0.05)
+  gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.6)
+  osc.connect(gain)
+  gain.connect(ac.destination)
+  osc.start()
+  lfo.start()
+  osc.stop(ac.currentTime + 0.65)
+  lfo.stop(ac.currentTime + 0.65)
+}

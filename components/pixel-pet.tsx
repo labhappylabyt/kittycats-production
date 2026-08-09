@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { forwardRef, type CSSProperties } from 'react'
 
 export type FurColor = {
   id: string
@@ -95,19 +95,21 @@ const TAIL: Array<[number, number]> = [
   [14, 8],
 ]
 
-export function PixelPet({
-  fur,
-  expression,
-  accessories,
-  className,
-  style,
-}: {
+export const PixelPet = forwardRef<SVGSVGElement, {
   fur: FurColor
   expression: Expression
   accessories: Set<Accessory>
   className?: string
   style?: CSSProperties
-}) {
+  onPetClick?: () => void
+}>(function PixelPet({
+  fur,
+  expression,
+  accessories,
+  className,
+  style,
+  onPetClick,
+}, ref) {
   const outline: Array<[number, number]> = []
   const fill: Array<[number, number]> = []
   const belly: Array<[number, number]> = []
@@ -144,20 +146,24 @@ export function PixelPet({
 
   return (
     <svg
+      ref={ref}
       viewBox={`0 0 ${W * CELL} ${H * CELL}`}
       className={className}
+      role="img"
+      aria-label="A pixel-art kitty pet — click to pet it"
+      onClick={onPetClick}
       style={{
         shapeRendering: 'crispEdges',
         imageRendering: 'pixelated',
+        cursor: 'pointer',
         ...style,
       }}
-      role="img"
-      aria-label="A pixel-art kitty pet"
     >
       {/* Layer 1: Heart aura (behind everything) */}
       {accessories.has('heartAura') && <HeartAura />}
 
       {/* Layer 2: Tail (behind body, solid fur color) */}
+      <g id="pet-tail">
       {TAIL.map(([x, y], i) => (
         <rect
           key={`tail-${i}`}
@@ -183,6 +189,7 @@ export function PixelPet({
           />
         )
       })}
+      </g>
 
       {/* Layer 3: Body fill */}
       {fill.map(([x, y]) => (
@@ -248,6 +255,7 @@ export function PixelPet({
       ))}
 
       {/* Layer 6: Eyes — all positions snapped to whole cells */}
+      <g id="pet-eyes" style={{ transition: 'transform 0.15s ease-out' }}>
       {expression === 'wink' ? (
         <>
           <rect x={4 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
@@ -276,6 +284,7 @@ export function PixelPet({
           <rect x={10 * CELL} y={7 * CELL} width={2 * CELL} height={CELL} fill={INK} />
         </>
       )}
+      </g>
 
       {/* Nose */}
       {nose.map(([x, y]) => (
@@ -310,7 +319,7 @@ export function PixelPet({
       {accessories.has('catnipBall') && <CatnipBall />}
     </svg>
   )
-}
+})
 
 // Glasses: aligned over eye row (row 7), lenses span the eyes.
 function Glasses() {
