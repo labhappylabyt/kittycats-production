@@ -17,6 +17,10 @@ export type Social = {
   color: string
   /** dark ink used for the outline, icon, and text */
   ink: string
+  /** status badge text shown on hover (null = no badge) */
+  status?: string | null
+  /** preview metadata shown in the hover drawer */
+  meta?: string | null
 }
 
 const INK = '#2f2a44'
@@ -29,6 +33,8 @@ export const socials: Social[] = [
     Icon: GitHubIcon,
     color: '#d7c9ff', // lavender
     ink: INK,
+    status: 'Active',
+    meta: '3 repos · 12 stars',
   },
   {
     name: 'Discord',
@@ -37,6 +43,8 @@ export const socials: Social[] = [
     Icon: DiscordIcon,
     color: '#c4d4ff', // soft periwinkle
     ink: INK,
+    status: 'Online',
+    meta: 'DMs open · GMT-5',
   },
   {
     name: 'Roblox',
@@ -45,6 +53,8 @@ export const socials: Social[] = [
     Icon: RobloxIcon,
     color: '#ffd0d0', // pastel coral
     ink: INK,
+    status: 'Playing',
+    meta: 'Level 42 · 1.2k friends',
   },
   {
     name: 'NameMC',
@@ -53,6 +63,8 @@ export const socials: Social[] = [
     Icon: BoxIcon,
     color: '#bdecd0', // mint green
     ink: INK,
+    status: 'AFK',
+    meta: 'Java + Bedrock · Skin updated 2d ago',
   },
   {
     name: 'Fav Song',
@@ -61,6 +73,8 @@ export const socials: Social[] = [
     Icon: MusicIcon,
     color: '#ffc4e1', // pink
     ink: INK,
+    status: null,
+    meta: null,
   },
   {
     name: 'Email',
@@ -69,5 +83,7 @@ export const socials: Social[] = [
     Icon: MailIcon,
     color: '#ffd7b0', // peach
     ink: INK,
+    status: null,
+    meta: null,
   },
 ]

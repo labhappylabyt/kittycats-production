@@ -14,7 +14,9 @@ export function PawCursor() {
   const pawRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (window.matchMedia('(pointer: coarse)').matches) return // skip on touch
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (window.matchMedia('(pointer: coarse)').matches || reduced) return
+
     const container = containerRef.current
     const paw = pawRef.current
     if (!container || !paw) return
@@ -29,6 +31,8 @@ export function PawCursor() {
     let lastSpawn = 0
     let lastX = -100
     let lastY = -100
+    let hoveringCard = false
+    let isDown = false
 
     const onMove = (e: MouseEvent) => {
       mx = e.clientX
@@ -70,28 +74,59 @@ export function PawCursor() {
     }
 
     const onDown = () => {
-      paw.style.transform = 'translate(-50%, -50%) scale(0.82)'
+      isDown = true
+      updateCursor()
     }
     const onUp = () => {
-      paw.style.transform = 'translate(-50%, -50%) scale(1)'
+      isDown = false
+      updateCursor()
+    }
+
+    const updateCursor = () => {
+      if (isDown) {
+        paw.style.transform = 'translate(-50%, -50%) scale(0.7)'
+        paw.style.filter = 'drop-shadow(0 0 6px rgba(255, 158, 203, 0.8))'
+      } else if (hoveringCard) {
+        paw.style.transform = 'translate(-50%, -50%) scale(1.8)'
+        paw.style.filter = 'drop-shadow(0 0 10px rgba(255, 158, 203, 0.9))'
+      } else {
+        paw.style.transform = 'translate(-50%, -50%) scale(1)'
+        paw.style.filter = 'drop-shadow(0 0 4px rgba(255, 158, 203, 0.5))'
+      }
+    }
+
+    // Detect hover on interactive elements (cards, buttons, links)
+    const onOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.closest('a, button, [role="button"]')) {
+        hoveringCard = true
+        updateCursor()
+      }
+    }
+    const onOut = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.closest('a, button, [role="button"]')) {
+        hoveringCard = false
+        updateCursor()
+      }
     }
 
     window.addEventListener('mousemove', onMove, { passive: true })
     window.addEventListener('mousedown', onDown, { passive: true })
     window.addEventListener('mouseup', onUp, { passive: true })
+    window.addEventListener('mouseover', onOver, { passive: true })
+    window.addEventListener('mouseout', onOut, { passive: true })
     document.documentElement.addEventListener('mouseleave', onLeave, { passive: true })
     document.documentElement.addEventListener('mouseenter', onEnter, { passive: true })
 
     const render = () => {
       if (initialized) {
-        // smooth lerp
         px += (mx - px) * 0.35
         py += (my - py) * 0.35
         paw.style.left = `${px}px`
         paw.style.top = `${py}px`
       }
 
-      // fade sparkles
       for (let i = sparkles.length - 1; i >= 0; i--) {
         const s = sparkles[i]
         s.life -= 0.04
@@ -112,6 +147,8 @@ export function PawCursor() {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mousedown', onDown)
       window.removeEventListener('mouseup', onUp)
+      window.removeEventListener('mouseover', onOver)
+      window.removeEventListener('mouseout', onOut)
       document.documentElement.removeEventListener('mouseleave', onLeave)
       document.documentElement.removeEventListener('mouseenter', onEnter)
       sparkles.forEach((s) => s.el.remove())
@@ -123,7 +160,7 @@ export function PawCursor() {
       <div
         ref={pawRef}
         className="paw-cursor"
-        style={{ transform: 'translate(-50%, -50%) scale(1)' }}
+        style={{ transform: 'translate(-50%, -50%) scale(1)', opacity: 0 }}
         aria-hidden="true"
       />
     </div>

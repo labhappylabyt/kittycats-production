@@ -425,7 +425,7 @@ export function HeroPet() {
         role="status"
         aria-live="polite"
       >
-        Pet Adopted! 🐾
+        Pet Adopted!
       </div>
 
       {/* Controls */}
@@ -506,7 +506,7 @@ export function HeroPet() {
         <span className="transition-transform duration-200 group-hover:scale-110">
           Adopt Pet
         </span>
-        <span aria-hidden="true">🐾</span>
+        <span aria-hidden="true">+</span>
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-200 group-hover:opacity-100"

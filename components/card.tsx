@@ -1,8 +1,9 @@
 'use client'
 
 import { useRef } from 'react'
+import gsap from 'gsap'
 import type { Social } from './socials'
-import { playClick, playMeow, resumeAudio } from './sfx'
+import { playPop, playTick, resumeAudio } from './sfx'
 import { isMuted } from './sound-toggle'
 
 const CARD_W = 256
@@ -11,6 +12,7 @@ const CARD_H = 360
 export function Card({ social, index }: { social: Social; index: number }) {
   const cardRef = useRef<HTMLAnchorElement | null>(null)
   const innerRef = useRef<HTMLSpanElement | null>(null)
+  const drawerRef = useRef<HTMLDivElement | null>(null)
 
   const onMove = (e: React.MouseEvent) => {
     const el = cardRef.current
@@ -23,26 +25,56 @@ export function Card({ social, index }: { social: Social; index: number }) {
     const dy = (e.clientY - cy) / (rect.height / 2)
     const rotY = dx * 12
     const rotX = -dy * 12
-    inner.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(8px)`
+    gsap.to(inner, {
+      rotateX: rotX,
+      rotateY: rotY,
+      z: 8,
+      duration: 0.15,
+      ease: 'power2.out',
+      transformPerspective: 1000,
+    })
   }
 
   const onLeave = () => {
     const inner = innerRef.current
-    if (!inner) return
-    inner.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px)'
+    if (inner) {
+      gsap.to(inner, {
+        rotateX: 0,
+        rotateY: 0,
+        z: 0,
+        duration: 0.4,
+        ease: 'power3.out',
+      })
+    }
+    if (drawerRef.current) {
+      gsap.to(drawerRef.current, {
+        opacity: 0,
+        y: 8,
+        duration: 0.2,
+        ease: 'power2.out',
+      })
+    }
   }
 
-  const onHover = () => {
+  const onEnter = () => {
     if (!isMuted()) {
       resumeAudio()
-      playMeow()
+      playTick()
+    }
+    if (drawerRef.current) {
+      gsap.to(drawerRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.3,
+        ease: 'power2.out',
+      })
     }
   }
 
   const onClick = () => {
     if (!isMuted()) {
       resumeAudio()
-      playClick()
+      playPop()
     }
   }
 
@@ -62,7 +94,7 @@ export function Card({ social, index }: { social: Social; index: number }) {
         aria-label={`${social.name} — ${social.handle}`}
         className="group block h-full w-full [perspective:1000px]"
         onMouseMove={onMove}
-        onMouseEnter={onHover}
+        onMouseEnter={onEnter}
         onMouseLeave={onLeave}
         onClick={onClick}
       >
@@ -83,10 +115,23 @@ export function Card({ social, index }: { social: Social; index: number }) {
             <span className="text-[13px] font-semibold uppercase tracking-[0.15em]">
               {social.name}
             </span>
-            <span
-              className="h-3 w-3 rounded-[3px] border-2"
-              style={{ borderColor: social.ink, background: social.ink }}
-            />
+            {social.status && (
+              <span
+                className="flex items-center gap-1 rounded-full border-2 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+                style={{ borderColor: social.ink }}
+              >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    social.status === 'Online' || social.status === 'Active'
+                      ? 'bg-green-500'
+                      : social.status === 'Playing'
+                        ? 'bg-blue-500'
+                        : 'bg-yellow-500'
+                  }`}
+                />
+                {social.status}
+              </span>
+            )}
           </span>
 
           <Icon className="mx-auto h-16 w-16 pointer-events-none" style={{ transform: 'translateZ(30px)' }} />
@@ -107,6 +152,26 @@ export function Card({ social, index }: { social: Social; index: number }) {
               →
             </span>
           </span>
+
+          {/* Hover preview drawer */}
+          {social.meta && (
+            <div
+              ref={drawerRef}
+              className="pointer-events-none absolute inset-x-3 bottom-3 rounded-xl border-2 bg-white/80 p-2.5 text-left opacity-0"
+              style={{
+                borderColor: social.ink,
+                transform: 'translateY(8px)',
+                backdropFilter: 'blur(4px)',
+              }}
+            >
+              <span className="block text-[11px] font-bold uppercase tracking-wider opacity-60">
+                Preview
+              </span>
+              <span className="block text-xs font-semibold leading-snug">
+                {social.meta}
+              </span>
+            </div>
+          )}
         </span>
       </a>
     </div>

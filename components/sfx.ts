@@ -80,6 +80,33 @@ export function playAdopt() {
   notes.forEach((f, i) => tone(f, i * 0.09, 0.18, 'triangle', 0.12))
 }
 
+// Soft pitched tick for card hovers — a quick blip.
+export function playTick() {
+  const ac = getCtx()
+  if (!ac) return
+  resumeAudio()
+  tone(1320, 0, 0.04, 'square', 0.05)
+}
+
+// Pop sound for item selection — a quick rising blip.
+export function playPop() {
+  const ac = getCtx()
+  if (!ac) return
+  resumeAudio()
+  tone(660, 0, 0.06, 'square', 0.1)
+  tone(990, 0.04, 0.08, 'square', 0.08)
+}
+
+// Cheerful chime for action triggers — a rising arpeggio.
+export function playChime() {
+  const ac = getCtx()
+  if (!ac) return
+  resumeAudio()
+  tone(659.25, 0, 0.12, 'triangle', 0.1)
+  tone(880, 0.08, 0.12, 'triangle', 0.1)
+  tone(1318.51, 0.16, 0.16, 'triangle', 0.1)
+}
+
 // Soft purr: low-frequency rumble with slight vibrato.
 export function playPurr() {
   const ac = getCtx()

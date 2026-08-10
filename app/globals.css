@@ -212,6 +212,18 @@ html {
   }
 }
 
+@keyframes reel-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.reel-spin {
+  animation: reel-spin 1.4s linear infinite;
+}
+
 /* Gentle breathing bob for the pixel cat */
 @keyframes cat-breathe {
   0%,
