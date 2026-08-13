@@ -1,0 +1,7 @@
+[project]
+name = "kittycats"
+version = "0.1.5"
+
+[build]
+command = "pnpm run build"
+publish = "dist"
