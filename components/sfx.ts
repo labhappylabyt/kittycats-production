@@ -1,135 +1,100 @@
 'use client'
 
-// Lightweight chiptune SFX engine built on the Web Audio API.
-// All sounds are synthesized — no audio files required.
-
+// Lightweight tactile sound engine built entirely with the Web Audio API.
+// Sound is opt-in through the UI toggle and never relies on downloaded media.
 let ctx: AudioContext | null = null
 
 function getCtx(): AudioContext | null {
   if (typeof window === 'undefined') return null
   if (ctx) return ctx
   try {
-    ctx = new (window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext })
-        .webkitAudioContext)()
+    ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
   } catch {
     return null
   }
   return ctx
 }
 
-function tone(
-  freq: number,
-  start: number,
-  dur: number,
-  type: OscillatorType = 'square',
-  vol = 0.12,
-) {
-  const ac = getCtx()
-  if (!ac) return
-  const osc = ac.createOscillator()
-  const gain = ac.createGain()
-  osc.type = type
-  osc.frequency.setValueAtTime(freq, ac.currentTime + start)
-  gain.gain.setValueAtTime(0, ac.currentTime + start)
-  gain.gain.linearRampToValueAtTime(vol, ac.currentTime + start + 0.012)
-  gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + start + dur)
-  osc.connect(gain)
-  gain.connect(ac.destination)
-  osc.start(ac.currentTime + start)
-  osc.stop(ac.currentTime + start + dur + 0.02)
+function tone(freq: number, start: number, duration: number, type: OscillatorType = 'sine', volume = 0.08) {
+  const audioContext = getCtx()
+  if (!audioContext) return
+  const oscillator = audioContext.createOscillator()
+  const gain = audioContext.createGain()
+  oscillator.type = type
+  oscillator.frequency.setValueAtTime(freq, audioContext.currentTime + start)
+  gain.gain.setValueAtTime(0.0001, audioContext.currentTime + start)
+  gain.gain.exponentialRampToValueAtTime(volume, audioContext.currentTime + start + 0.008)
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + start + duration)
+  oscillator.connect(gain)
+  gain.connect(audioContext.destination)
+  oscillator.start(audioContext.currentTime + start)
+  oscillator.stop(audioContext.currentTime + start + duration + 0.02)
 }
 
 export async function resumeAudio() {
-  const ac = getCtx()
-  if (!ac) return
-  if (ac.state === 'suspended') {
-    try {
-      await ac.resume()
-    } catch {
-      /* noop */
-    }
+  const audioContext = getCtx()
+  if (audioContext?.state === 'suspended') {
+    try { await audioContext.resume() } catch { /* browser policy rejection */ }
   }
 }
 
-// Soft chiptune "meow": two quick descending formants.
 export function playMeow() {
-  const ac = getCtx()
-  if (!ac) return
-  resumeAudio()
-  tone(880, 0, 0.16, 'triangle', 0.14)
-  tone(660, 0.06, 0.18, 'triangle', 0.12)
-  tone(440, 0.12, 0.14, 'sine', 0.08)
+  tone(880, 0, 0.16, 'triangle', 0.09)
+  tone(660, 0.06, 0.18, 'triangle', 0.075)
+  tone(440, 0.12, 0.14, 'sine', 0.05)
 }
 
-// Tiny pixel click for control taps.
 export function playClick() {
-  const ac = getCtx()
-  if (!ac) return
-  resumeAudio()
-  tone(1200, 0, 0.05, 'square', 0.08)
-  tone(800, 0.03, 0.05, 'square', 0.06)
+  tone(1280, 0, 0.045, 'sine', 0.045)
+  tone(860, 0.028, 0.055, 'sine', 0.034)
 }
 
-// Happy adoption jingle.
 export function playAdopt() {
-  const ac = getCtx()
-  if (!ac) return
-  resumeAudio()
-  const notes = [523.25, 659.25, 783.99, 1046.5] // C5 E5 G5 C6
-  notes.forEach((f, i) => tone(f, i * 0.09, 0.18, 'triangle', 0.12))
+  ;[523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => tone(frequency, index * 0.085, 0.18, 'triangle', 0.075))
 }
 
-// Soft pitched tick for card hovers — a quick blip.
 export function playTick() {
-  const ac = getCtx()
-  if (!ac) return
-  resumeAudio()
-  tone(1320, 0, 0.04, 'square', 0.05)
+  tone(1500, 0, 0.035, 'sine', 0.025)
 }
 
-// Pop sound for item selection — a quick rising blip.
 export function playPop() {
-  const ac = getCtx()
-  if (!ac) return
-  resumeAudio()
-  tone(660, 0, 0.06, 'square', 0.1)
-  tone(990, 0.04, 0.08, 'square', 0.08)
+  tone(620, 0, 0.055, 'sine', 0.055)
+  tone(990, 0.035, 0.07, 'triangle', 0.042)
 }
 
-// Cheerful chime for action triggers — a rising arpeggio.
+// A faint two-tone shimmer for major hover transitions.
+export function playHoverHum() {
+  tone(220, 0, 0.16, 'sine', 0.014)
+  tone(330, 0.04, 0.19, 'sine', 0.011)
+}
+
 export function playChime() {
-  const ac = getCtx()
-  if (!ac) return
-  resumeAudio()
-  tone(659.25, 0, 0.12, 'triangle', 0.1)
-  tone(880, 0.08, 0.12, 'triangle', 0.1)
-  tone(1318.51, 0.16, 0.16, 'triangle', 0.1)
+  tone(659.25, 0, 0.12, 'triangle', 0.06)
+  tone(880, 0.08, 0.12, 'triangle', 0.06)
+  tone(1318.51, 0.16, 0.16, 'triangle', 0.06)
 }
 
-// Soft purr: low-frequency rumble with slight vibrato.
 export function playPurr() {
-  const ac = getCtx()
-  if (!ac) return
-  resumeAudio()
-  const osc = ac.createOscillator()
-  const gain = ac.createGain()
-  const lfo = ac.createOscillator()
-  const lfoGain = ac.createGain()
-  osc.type = 'sawtooth'
-  osc.frequency.value = 60
+  const audioContext = getCtx()
+  if (!audioContext) return
+  const oscillator = audioContext.createOscillator()
+  const gain = audioContext.createGain()
+  const lfo = audioContext.createOscillator()
+  const lfoGain = audioContext.createGain()
+  oscillator.type = 'sine'
+  oscillator.frequency.value = 64
   lfo.type = 'sine'
   lfo.frequency.value = 18
-  lfoGain.gain.value = 8
+  lfoGain.gain.value = 5
   lfo.connect(lfoGain)
-  lfoGain.connect(osc.frequency)
-  gain.gain.setValueAtTime(0, ac.currentTime)
-  gain.gain.linearRampToValueAtTime(0.06, ac.currentTime + 0.05)
-  gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.6)
-  osc.connect(gain)
-  gain.connect(ac.destination)
-  osc.start()
+  lfoGain.connect(oscillator.frequency)
+  gain.gain.setValueAtTime(0.0001, audioContext.currentTime)
+  gain.gain.exponentialRampToValueAtTime(0.028, audioContext.currentTime + 0.06)
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.55)
+  oscillator.connect(gain)
+  gain.connect(audioContext.destination)
+  oscillator.start()
   lfo.start()
-  osc.stop(ac.currentTime + 0.65)
-  lfo.stop(ac.currentTime + 0.65)
+  oscillator.stop(audioContext.currentTime + 0.6)
+  lfo.stop(audioContext.currentTime + 0.6)
 }

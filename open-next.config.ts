@@ -1,5 +1,5 @@
-import { defineCloudflareConfig } from "@opennextjs/cloudflare/config";
+import { defineCloudflareConfig } from '@opennextjs/cloudflare/config'
 
-export default defineCloudflareConfig({
-  buildCommand: "npx next build",
-});
+// Build commands are now owned by the package scripts; adapter-specific overrides
+// remain intentionally empty to preserve the default Cloudflare runtime behavior.
+export default defineCloudflareConfig()

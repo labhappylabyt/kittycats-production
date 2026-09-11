@@ -1,36 +1,30 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { playClick } from './sfx'
+import { playClick, resumeAudio } from './sfx'
+import { isMuted } from './sound-toggle'
 
 export function ContactChip({ email }: { email: string }) {
   const [copied, setCopied] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-  }, [])
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current) }, [])
 
   const copy = async () => {
-    playClick()
+    if (!isMuted()) { resumeAudio(); playClick() }
     try {
       await navigator.clipboard.writeText(email)
     } catch {
-      // fallback for older browsers
       try {
-        const ta = document.createElement('textarea')
-        ta.value = email
-        ta.style.position = 'fixed'
-        ta.style.opacity = '0'
-        document.body.appendChild(ta)
-        ta.select()
+        const textarea = document.createElement('textarea')
+        textarea.value = email
+        textarea.style.position = 'fixed'
+        textarea.style.opacity = '0'
+        document.body.appendChild(textarea)
+        textarea.select()
         document.execCommand('copy')
-        document.body.removeChild(ta)
-      } catch {
-        /* noop */
-      }
+        document.body.removeChild(textarea)
+      } catch { /* clipboard unavailable */ }
     }
     setCopied(true)
     if (timerRef.current) clearTimeout(timerRef.current)
@@ -39,38 +33,12 @@ export function ContactChip({ email }: { email: string }) {
 
   return (
     <div className="relative">
-      <button
-        type="button"
-        onClick={copy}
-        className="group inline-flex items-center gap-2 rounded-2xl border-4 bg-card px-4 py-2 text-sm font-bold text-foreground shadow-[4px_4px_0_0_var(--ink)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0"
-        style={{ borderColor: 'var(--ink)' }}
-        aria-label={`Copy email ${email}`}
-      >
-        <svg
-          viewBox="0 0 24 24"
-          className="h-4 w-4"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path d="M2 5.5A2.5 2.5 0 0 1 4.5 3h15A2.5 2.5 0 0 1 22 5.5v.4l-10 5.6L2 5.9v-.4Zm0 2.6 10 5.6 10-5.6V18.5a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 18.5V8.1Z" />
-        </svg>
-        <span>{email}</span>
-        <span
-          aria-hidden="true"
-          className="ml-1 text-xs opacity-60 transition-opacity group-hover:opacity-100"
-        >
-          {copied ? 'Copied! 🐾' : 'click to copy'}
-        </span>
+      <button type="button" onClick={copy} className="group inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.05] px-4 py-3 text-sm text-white shadow-[0_15px_35px_rgba(0,0,0,0.18)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[#d8ff6a]/60 hover:bg-[#d8ff6a] hover:text-[#08090e]" aria-label={`Copy email ${email}`}>
+        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true"><path d="M2 5.5A2.5 2.5 0 0 1 4.5 3h15A2.5 2.5 0 0 1 22 5.5v.4l-10 5.6L2 5.9v-.4Zm0 2.6 10 5.6 10-5.6V18.5a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 18.5V8.1Z" /></svg>
+        <span className="font-mono text-[0.7rem] tracking-wide">{email}</span>
+        <span aria-hidden="true" className="font-mono text-[0.54rem] uppercase tracking-[0.13em] opacity-45 transition-opacity group-hover:opacity-70">{copied ? 'Copied' : 'Copy'}</span>
       </button>
-      {/* tooltip */}
-      <div
-        className={`pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg border-2 bg-card px-2 py-1 text-xs font-bold shadow-[2px_2px_0_0_var(--ink)] transition-all duration-200 ${
-          copied ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
-        }`}
-        style={{ borderColor: 'var(--ink)' }}
-      >
-        Copied! 🐾
-      </div>
+      <div className={`pointer-events-none absolute -top-9 right-0 whitespace-nowrap border border-[#d8ff6a]/30 bg-[#10121a] px-3 py-1.5 font-mono text-[0.54rem] uppercase tracking-[0.14em] text-[#d8ff6a] shadow-xl transition-all duration-200 ${copied ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'}`}>Signal copied</div>
     </div>
   )
 }

@@ -167,58 +167,53 @@ export function CassettePlayer() {
 
   return (
     <div
-      className="relative flex h-full w-full flex-col items-center justify-between overflow-hidden rounded-2xl border-4 p-6"
+      className="relative flex h-full w-full flex-col items-center justify-between overflow-hidden border border-[#ef83c7]/40 p-6 shadow-[0_22px_55px_rgba(239,131,199,0.11)]"
       style={{
-        background: '#ffc4e1',
-        color: 'var(--ink)',
-        borderColor: 'var(--ink)',
-        boxShadow: '6px 6px 0 0 var(--ink)',
+        background: 'radial-gradient(circle at 18% 8%, rgba(239,131,199,0.34), transparent 34%), linear-gradient(145deg, rgba(28,29,42,0.98), rgba(9,10,15,0.98))',
+        color: '#f5f2ff',
       }}
     >
       <div className="flex w-full items-center justify-between">
-        <span className="text-[13px] font-semibold uppercase tracking-[0.15em]">
+        <span className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.17em] text-white/75">
           Fav Song
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider opacity-60">
+        <span className="font-mono text-[0.52rem] font-bold uppercase tracking-wider text-white/40">
           Cassette
         </span>
       </div>
 
       {/* Cassette body */}
       <div
-        className="relative my-2 flex w-full flex-col items-center rounded-xl border-2 p-4"
-        style={{ borderColor: 'var(--ink)', background: 'rgba(255,255,255,0.3)' }}
+        className="relative my-2 flex w-full flex-col items-center border border-white/12 bg-white/[0.04] p-4"
       >
         {/* Reels */}
         <div className="flex w-full items-center justify-between px-6">
           <div
-            className={`flex h-14 w-14 items-center justify-center rounded-full border-4 ${playing ? 'reel-spin' : ''}`}
-            style={{ borderColor: 'var(--ink)' }}
+            className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#ef83c7]/70 ${playing ? 'reel-spin' : ''}`}
           >
-            <div className="h-5 w-5 rounded-full border-2" style={{ borderColor: 'var(--ink)' }} />
-            <div className="absolute h-0.5 w-10 rotate-0" style={{ background: 'var(--ink)' }} />
+            <div className="h-5 w-5 rounded-full border border-white/70" />
+            <div className="absolute h-px w-10 rotate-0 bg-white/60" />
           </div>
-          <div className="h-1 flex-1 mx-2 rounded-full" style={{ background: 'var(--ink)' }} />
+          <div className="mx-2 h-px flex-1 bg-white/30" />
           <div
-            className={`flex h-14 w-14 items-center justify-center rounded-full border-4 ${playing ? 'reel-spin' : ''}`}
-            style={{ borderColor: 'var(--ink)' }}
+            className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#ef83c7]/70 ${playing ? 'reel-spin' : ''}`}
           >
-            <div className="h-5 w-5 rounded-full border-2" style={{ borderColor: 'var(--ink)' }} />
-            <div className="absolute h-0.5 w-10" style={{ background: 'var(--ink)' }} />
+            <div className="h-5 w-5 rounded-full border border-white/70" />
+            <div className="absolute h-px w-10 bg-white/60" />
           </div>
         </div>
 
         {/* Track info */}
         <div className="mt-3 text-center">
-          <div className="text-sm font-bold leading-tight">{track.title}</div>
-          <div className="text-xs font-medium opacity-70">by {track.artist}</div>
+          <div className="text-sm font-semibold leading-tight text-white">{track.title}</div>
+          <div className="font-mono text-[0.58rem] uppercase tracking-[0.12em] text-white/45">by {track.artist}</div>
         </div>
 
         {/* Progress bar */}
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full" style={{ background: 'rgba(0,0,0,0.15)' }}>
+        <div className="mt-3 h-px w-full overflow-hidden bg-white/15">
           <div
-            className="h-full rounded-full transition-[width] duration-75"
-            style={{ width: `${progress}%`, background: 'var(--ink)' }}
+            className="h-full bg-[#ef83c7] transition-[width] duration-75"
+            style={{ width: `${progress}%` }}
           />
         </div>
       </div>
@@ -229,8 +224,7 @@ export function CassettePlayer() {
           type="button"
           onClick={() => switchTrack(-1)}
           aria-label="Previous track"
-          className="flex h-10 w-10 items-center justify-center rounded-xl border-2 transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0"
-          style={{ borderColor: 'var(--ink)', background: 'rgba(255,255,255,0.3)' }}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] transition-transform duration-150 hover:-translate-y-0.5 hover:border-[#ef83c7]/60 active:translate-y-0"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
             <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
@@ -240,8 +234,7 @@ export function CassettePlayer() {
           type="button"
           onClick={togglePlay}
           aria-label={playing ? 'Pause' : 'Play'}
-          className="flex h-14 w-14 items-center justify-center rounded-2xl border-4 transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0"
-          style={{ borderColor: 'var(--ink)', background: 'rgba(255,255,255,0.4)' }}
+          className="flex h-14 w-14 items-center justify-center rounded-full border border-[#ef83c7]/70 bg-[#ef83c7] text-[#0b0c12] shadow-[0_0_25px_rgba(239,131,199,0.2)] transition-transform duration-150 hover:-translate-y-0.5 hover:scale-105 active:translate-y-0"
         >
           {playing ? (
             <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden="true">
@@ -257,8 +250,7 @@ export function CassettePlayer() {
           type="button"
           onClick={() => switchTrack(1)}
           aria-label="Next track"
-          className="flex h-10 w-10 items-center justify-center rounded-xl border-2 transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0"
-          style={{ borderColor: 'var(--ink)', background: 'rgba(255,255,255,0.3)' }}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] transition-transform duration-150 hover:-translate-y-0.5 hover:border-[#ef83c7]/60 active:translate-y-0"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
             <path d="M6 18l8.5-6L6 6v12zM16 6h2v12h-2V6z" />

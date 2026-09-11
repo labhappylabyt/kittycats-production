@@ -66,7 +66,7 @@ export function PawCursor() {
       el.className = 'paw-sparkle pointer-events-none'
       el.style.left = `${x + (Math.random() * 12 - 6)}px`
       el.style.top = `${y + (Math.random() * 12 - 6)}px`
-      const colors = ['#ff9ecb', '#ffd166', '#bdecd0', '#c4d4ff', '#fff7c2']
+      const colors = ['#d8ff6a', '#a78bfa', '#52d6b5', '#ffffff', '#ffc27a']
       el.style.background = colors[Math.floor(Math.random() * colors.length)]
       el.style.setProperty('--rot', `${Math.random() * 360}deg`)
       container.appendChild(el)
@@ -85,13 +85,13 @@ export function PawCursor() {
     const updateCursor = () => {
       if (isDown) {
         paw.style.transform = 'translate(-50%, -50%) scale(0.7)'
-        paw.style.filter = 'drop-shadow(0 0 6px rgba(255, 158, 203, 0.8))'
+        paw.style.filter = 'drop-shadow(0 0 6px rgba(216, 255, 106, 0.8))'
       } else if (hoveringCard) {
         paw.style.transform = 'translate(-50%, -50%) scale(1.8)'
-        paw.style.filter = 'drop-shadow(0 0 10px rgba(255, 158, 203, 0.9))'
+        paw.style.filter = 'drop-shadow(0 0 10px rgba(216, 255, 106, 0.9))'
       } else {
         paw.style.transform = 'translate(-50%, -50%) scale(1)'
-        paw.style.filter = 'drop-shadow(0 0 4px rgba(255, 158, 203, 0.5))'
+        paw.style.filter = 'drop-shadow(0 0 4px rgba(216, 255, 106, 0.5))'
       }
     }
 
