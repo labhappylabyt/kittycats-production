@@ -397,7 +397,7 @@ export function HeroPet() {
         className="relative flex h-64 w-64 items-center justify-center overflow-hidden rounded-[34px] border border-white/14 bg-[#171a1c] p-4 shadow-[inset_0_0_50px_rgba(255,255,255,0.04),8px_8px_0_rgba(0,0,0,0.18)] sm:h-80 sm:w-80"
       >
         <div className="pointer-events-none absolute inset-4 rounded-[26px] border border-white/6" aria-hidden="true" />
-        <div className="pointer-events-none absolute h-[86%] w-[86%] rounded-[28px] border border-[#d9f27c]/12 [animation:glow-pulse_4s_ease-in-out_infinite]" aria-hidden="true" />
+        <div className="pointer-events-none absolute h-[86%] w-[86%] rounded-[28px] border border-[#d9f27c]/12" aria-hidden="true" />
         <div
           ref={confettiLayerRef}
           className="pointer-events-none absolute inset-0 overflow-visible"
@@ -412,7 +412,7 @@ export function HeroPet() {
             fur={fur}
             expression={expression}
             accessories={accessories}
-            className="relative z-10 h-48 w-48 drop-shadow-[0_0_24px_rgba(216,255,106,0.22)] sm:h-60 sm:w-60"
+            className="relative z-10 h-48 w-48 sm:h-60 sm:w-60 [image-rendering:pixelated]"
             onPetClick={handlePetClick}
           />
         </div>
