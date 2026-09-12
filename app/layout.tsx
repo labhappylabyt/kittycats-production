@@ -1,26 +1,17 @@
 import type { Metadata, Viewport } from 'next'
-import { Fredoka, Silkscreen } from 'next/font/google'
+import { DM_Sans, Syne, Silkscreen } from 'next/font/google'
 import { CinematicShell } from '@/components/cinematic-shell'
 import './globals.css'
 
-const fredoka = Fredoka({
-  subsets: ['latin'],
-  variable: '--font-fredoka',
-  weight: ['400', '500', '600', '700'],
-})
-
-const silkscreen = Silkscreen({
-  subsets: ['latin'],
-  variable: '--font-pixel',
-  weight: ['400', '700'],
-  display: 'swap',
-})
+const ui = DM_Sans({ subsets: ['latin'], variable: '--font-ui', weight: ['400', '500', '600', '700'] })
+const display = Syne({ subsets: ['latin'], variable: '--font-display', weight: ['600', '700', '800'] })
+const pixel = Silkscreen({ subsets: ['latin'], variable: '--font-pixel', weight: ['400', '700'], display: 'swap' })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://kittycats.cc'),
-  title: 'kittycats.cc — Pixel Pet Builder & Lab Deck',
-  description: 'Build your own pixel kitty, adopt it as a PNG, and explore my links across the web — GitHub, Discord, Roblox, NameMC, and more.',
-  generator: 'Bolt',
+  title: 'kittycats.cc — Make a tiny companion',
+  description: 'Make a pixel kitty, give them a little personality, and send your new companion out into the world.',
+  generator: 'Next.js',
   icons: {
     icon: [
       { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
@@ -30,35 +21,23 @@ export const metadata: Metadata = {
     apple: '/apple-icon.png',
   },
   openGraph: {
-    title: 'kittycats.cc — Pixel Pet Builder & Lab Deck',
-    description: 'Build your own pixel kitty, adopt it as a PNG, and explore my links across the web.',
-    url: 'https://kittycats.cc',
-    siteName: 'kittycats.cc',
-    type: 'website',
-    images: [{ url: '/placeholder.jpg', width: 1200, height: 630, alt: 'kittycats.cc Pixel Pet Builder' }],
+    title: 'kittycats.cc — Make a tiny companion',
+    description: 'Make a pixel kitty, give them a little personality, and send your new companion out into the world.',
+    url: 'https://kittycats.cc', siteName: 'kittycats.cc', type: 'website',
+    images: [{ url: '/placeholder.jpg', width: 1200, height: 630, alt: 'kittycats.cc pixel pet builder' }],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'kittycats.cc — Pixel Pet Builder & Lab Deck',
-    description: 'Build your own pixel kitty, adopt it as a PNG, and explore my links across the web.',
-    images: ['/placeholder.jpg'],
-  },
+  twitter: { card: 'summary_large_image', title: 'kittycats.cc — Make a tiny companion', description: 'Make a pixel kitty and send them out into the world.', images: ['/placeholder.jpg'] },
 }
 
-export const viewport: Viewport = {
-  colorScheme: 'dark',
-  themeColor: '#08090e',
-}
+export const viewport: Viewport = { colorScheme: 'dark', themeColor: '#151719' }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`dark ${fredoka.variable} ${silkscreen.variable}`}>
+    <html lang="en" className={`dark ${ui.variable} ${display.variable} ${pixel.variable}`}>
       <body className="relative min-h-screen antialiased">
         <CinematicShell>{children}</CinematicShell>
         <footer className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-5 pb-4">
-          <span className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-white/35">
-            © 2026 kittycats.cc · all signals received
-          </span>
+          <span className="ui-label text-white/25">© 2026 kittycats.cc · made with care</span>
         </footer>
       </body>
     </html>

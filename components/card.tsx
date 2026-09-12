@@ -57,39 +57,38 @@ export function Card({ social, index }: { social: Social; index: number }) {
       >
         <div
           ref={innerRef}
-          className="card-float relative flex h-full w-full flex-col justify-between overflow-hidden border border-white/10 p-6 transition-[border-color,box-shadow,transform] duration-500 ease-out group-hover:-translate-y-2"
+          className="card-float relative flex h-full w-full flex-col justify-between overflow-hidden rounded-[18px] border border-white/14 bg-[#222629] p-6 transition-[border-color,box-shadow,transform] duration-500 ease-out group-hover:-translate-y-2"
           style={{
-            background: `radial-gradient(circle at 16% 8%, ${social.color}75, transparent 34%), linear-gradient(145deg, rgba(27,29,42,0.95), rgba(10,11,17,0.96))`,
-            borderColor: `${social.color}60`,
-            boxShadow: `0 22px 55px ${social.color}18, inset 0 1px rgba(255,255,255,0.08)`,
+            borderColor: `${social.color}70`,
+            boxShadow: `6px 6px 0 rgba(0,0,0,.2), inset 0 1px rgba(255,255,255,0.08)`,
             animationDelay: `${(index % 6) * 0.42}s`,
             transformStyle: 'preserve-3d',
           }}
         >
-          <div className="pointer-events-none absolute inset-0 opacity-30" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)', backgroundSize: '28px 28px', maskImage: 'linear-gradient(to bottom, black, transparent 70%)' }} />
+          <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)', backgroundSize: '28px 28px', maskImage: 'linear-gradient(to bottom, black, transparent 70%)' }} />
           <div className="relative flex items-center justify-between" style={{ transform: 'translateZ(42px)' }}>
-            <span className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.17em] text-white/75">{social.name}</span>
-            {social.status && <span className="flex items-center gap-1.5 font-mono text-[0.52rem] uppercase tracking-[0.14em] text-white/55"><span className="h-1.5 w-1.5 rounded-full" style={{ background: social.color, boxShadow: `0 0 10px ${social.color}` }} />{social.status}</span>}
+            <span className="ui-label text-white/75">{social.name}</span>
+            {social.status && <span className="flex items-center gap-1.5 ui-label text-white/55"><span className="h-1.5 w-1.5 rounded-full" style={{ background: social.color }} />{social.status}</span>}
           </div>
 
           <div className="relative flex flex-col items-center gap-4" style={{ transform: 'translateZ(30px)' }}>
-            <span className="grid h-20 w-20 place-items-center rounded-full border border-white/10 bg-black/15" style={{ color: social.color, boxShadow: `0 0 30px ${social.color}25` }}>
+            <span className="grid h-20 w-20 place-items-center rounded-[22px] border border-white/10 bg-[#191b1d]" style={{ color: social.color }}>
               <Icon className="h-9 w-9 pointer-events-none" />
             </span>
-            <span className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-white/35">Channel {String((index % 5) + 1).padStart(2, '0')}</span>
+            <span className="ui-label text-white/35">Door {String((index % 5) + 1).padStart(2, '0')}</span>
           </div>
 
           <div className="relative flex items-end justify-between" style={{ transform: 'translateZ(42px)' }}>
             <span className="flex flex-col gap-1">
               <span className="text-lg font-semibold tracking-tight text-white">{social.handle}</span>
-              <span className="font-mono text-[0.56rem] uppercase tracking-[0.14em] text-white/45">Open signal</span>
+              <span className="ui-label text-white/45">Open door</span>
             </span>
             <span aria-hidden="true" className="translate-x-1 text-xl text-white/40 transition-all duration-300 group-hover:translate-x-0 group-hover:text-[#d8ff6a]">↗</span>
           </div>
 
           {social.meta && (
-            <div ref={drawerRef} className="pointer-events-none absolute inset-x-4 bottom-4 border border-white/12 bg-[#0b0c12]/85 p-3 text-left opacity-0 backdrop-blur-xl" style={{ transform: 'translateY(10px)' }}>
-              <span className="block font-mono text-[0.5rem] uppercase tracking-[0.16em] text-white/35">Live readout</span>
+            <div ref={drawerRef} className="pointer-events-none absolute inset-x-4 bottom-4 rounded-[12px] border border-white/12 bg-[#191b1d]/95 p-3 text-left opacity-0" style={{ transform: 'translateY(10px)' }}>
+              <span className="ui-label block text-white/35">A little peek</span>
               <span className="mt-1 block text-xs font-medium text-white/80">{social.meta}</span>
             </div>
           )}

@@ -394,10 +394,10 @@ export function HeroPet() {
       {/* Live preview stage */}
       <div
         ref={stageRef}
-        className="relative flex h-64 w-64 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-[#11131b]/70 p-4 shadow-[inset_0_0_60px_rgba(124,92,255,0.17),0_28px_70px_rgba(0,0,0,0.34)] sm:h-80 sm:w-80"
+        className="relative flex h-64 w-64 items-center justify-center overflow-hidden rounded-[34px] border border-white/14 bg-[#171a1c] p-4 shadow-[inset_0_0_50px_rgba(255,255,255,0.04),8px_8px_0_rgba(0,0,0,0.18)] sm:h-80 sm:w-80"
       >
-        <div className="pointer-events-none absolute inset-4 rounded-full border border-white/5" aria-hidden="true" />
-        <div className="pointer-events-none absolute h-[86%] w-[86%] rounded-full border border-[#d8ff6a]/15 [animation:glow-pulse_4s_ease-in-out_infinite]" aria-hidden="true" />
+        <div className="pointer-events-none absolute inset-4 rounded-[26px] border border-white/6" aria-hidden="true" />
+        <div className="pointer-events-none absolute h-[86%] w-[86%] rounded-[28px] border border-[#d9f27c]/12 [animation:glow-pulse_4s_ease-in-out_infinite]" aria-hidden="true" />
         <div
           ref={confettiLayerRef}
           className="pointer-events-none absolute inset-0 overflow-visible"
@@ -420,7 +420,7 @@ export function HeroPet() {
 
       {/* Toast notification */}
       <div
-        className={`pointer-events-none fixed left-1/2 top-20 z-50 -translate-x-1/2 border border-[#d8ff6a]/50 bg-[#10121a]/95 px-5 py-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#d8ff6a] shadow-[0_16px_42px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all duration-300 ${
+        className={`pointer-events-none fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-[12px] border border-[#d9f27c]/50 bg-[#24282a] px-5 py-3 ui-label text-[#d9f27c] shadow-[5px_5px_0_rgba(0,0,0,.22)] transition-all duration-300 ${
           toast ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
         }`}
         role="status"
@@ -439,9 +439,9 @@ export function HeroPet() {
                 type="button"
                 onClick={() => pickFur(f)}
                 aria-pressed={fur.id === f.id}
-                className={`flex items-center gap-2 rounded-xl border-2 px-2.5 py-1.5 text-xs font-bold transition-transform duration-150 hover:-translate-y-0.5 ${
+                className={`flex items-center gap-2 rounded-[10px] border px-2.5 py-1.5 text-xs font-semibold transition-transform duration-150 hover:-translate-y-0.5 ${
                   fur.id === f.id
-                    ? 'border-[#d8ff6a]/70 bg-white/[0.09] text-white shadow-[0_0_22px_rgba(216,255,106,0.1)]'
+                    ? 'border-[#d9f27c]/70 bg-[#d9f27c]/12 text-white shadow-[3px_3px_0_rgba(0,0,0,.16)]'
                     : 'border-transparent text-white/45 hover:border-white/15 hover:text-white'
                 }`}
               >
@@ -463,9 +463,9 @@ export function HeroPet() {
                 type="button"
                 onClick={() => pickExpression(e.id)}
                 aria-pressed={expression === e.id}
-                className={`rounded-xl border-2 px-3 py-1.5 text-xs font-bold transition-transform duration-150 hover:-translate-y-0.5 ${
+                className={`rounded-[10px] border px-3 py-1.5 text-xs font-semibold transition-transform duration-150 hover:-translate-y-0.5 ${
                   expression === e.id
-                    ? 'border-[#d8ff6a]/70 bg-white/[0.09] text-white shadow-[0_0_22px_rgba(216,255,106,0.1)]'
+                    ? 'border-[#d9f27c]/70 bg-[#d9f27c]/12 text-white shadow-[3px_3px_0_rgba(0,0,0,.16)]'
                     : 'border-transparent text-white/45 hover:border-white/15 hover:text-white'
                 }`}
               >
@@ -483,9 +483,9 @@ export function HeroPet() {
                 type="button"
                 onClick={() => toggleAccessory(a.id)}
                 aria-pressed={accessories.has(a.id)}
-                className={`flex items-center gap-1 rounded-xl border-2 px-2.5 py-1.5 text-xs font-bold transition-transform duration-150 hover:-translate-y-0.5 ${
+                className={`flex items-center gap-1 rounded-[10px] border px-2.5 py-1.5 text-xs font-semibold transition-transform duration-150 hover:-translate-y-0.5 ${
                   accessories.has(a.id)
-                    ? 'border-[#d8ff6a]/70 bg-white/[0.09] text-white shadow-[0_0_22px_rgba(216,255,106,0.1)]'
+                    ? 'border-[#d9f27c]/70 bg-[#d9f27c]/12 text-white shadow-[3px_3px_0_rgba(0,0,0,.16)]'
                     : 'border-transparent text-white/45 hover:border-white/15 hover:text-white'
                 }`}
               >
@@ -501,7 +501,7 @@ export function HeroPet() {
       <button
         type="button"
         onClick={adopt}
-        className="group relative inline-flex items-center gap-3 rounded-full border border-[#d8ff6a]/70 bg-[#d8ff6a] px-7 py-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#08090e] shadow-[0_14px_35px_rgba(216,255,106,0.2)] transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_22px_44px_rgba(216,255,106,0.3)] active:translate-y-0 active:scale-[0.99]"
+        className="group relative inline-flex items-center gap-3 rounded-[14px] border border-[#d9f27c]/70 bg-[#d9f27c] px-7 py-3 font-semibold text-[0.68rem] tracking-[0.08em] text-[#08090e] shadow-[4px_4px_0_#879e42] transition-all duration-300 hover:-translate-y-1 hover:shadow-[7px_7px_0_#879e42] active:translate-y-0 active:shadow-[2px_2px_0_#879e42]"
       >
         <span className="transition-transform duration-200 group-hover:scale-110">
           Adopt Pet
@@ -512,7 +512,7 @@ export function HeroPet() {
           className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
           style={{
             boxShadow:
-              '0 0 24px 4px rgba(216,255,106,0.35), 0 0 48px 8px rgba(216,255,106,0.18)',
+              '0 0 0 1px rgba(217,242,124,0.35)',
           }}
         />
       </button>
@@ -528,8 +528,8 @@ function ControlPanel({
   children: React.ReactNode
 }) {
   return (
-    <div className="border border-white/10 bg-black/15 p-3 backdrop-blur-sm">
-      <h3 className="mb-3 text-center font-mono text-[0.56rem] font-bold uppercase tracking-[0.18em] text-white/40">
+    <div className="rounded-[14px] border border-white/10 bg-[#1c2022] p-3 shadow-[3px_3px_0_rgba(0,0,0,.14)]">
+      <h3 className="mb-3 text-center ui-label text-white/40">
         {title}
       </h3>
       {children}
