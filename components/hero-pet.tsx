@@ -399,7 +399,7 @@ export function HeroPet() {
         className="relative flex h-64 w-64 items-center justify-center overflow-hidden rounded-[34px] border border-white/14 bg-[#171a1c] p-4 shadow-[inset_0_0_50px_rgba(255,255,255,0.04),8px_8px_0_rgba(0,0,0,0.18)] sm:h-80 sm:w-80"
       >
         <div className="pointer-events-none absolute inset-4 rounded-[26px] border border-white/6" aria-hidden="true" />
-        <div className="pointer-events-none absolute h-[86%] w-[86%] rounded-[28px] border border-[#d9f27c]/12" aria-hidden="true" />
+        <div className="pointer-events-none absolute h-[86%] w-[86%] rounded-[28px] border border-[#ffd166]/12" aria-hidden="true" />
         <div
           ref={confettiLayerRef}
           className="pointer-events-none absolute inset-0 overflow-visible"
@@ -422,7 +422,7 @@ export function HeroPet() {
 
       {/* Toast notification */}
       <div
-        className={`pointer-events-none fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-[12px] border border-[#d9f27c]/50 bg-[#24282a] px-5 py-3 ui-label text-[#d9f27c] shadow-[5px_5px_0_rgba(0,0,0,.22)] transition-all duration-300 ${
+        className={`pointer-events-none fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-[12px] border border-[#ffd166]/50 bg-[#1b1929] px-5 py-3 ui-label text-[#ffd166] shadow-[5px_5px_0_rgba(0,0,0,.22)] transition-all duration-300 ${
           toast ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
         }`}
         role="status"
@@ -459,7 +459,7 @@ export function HeroPet() {
                 aria-pressed={fur.id === f.id}
                 className={`fur-swatch flex flex-col items-center gap-1 rounded-[14px] border-2 px-2 py-2 text-[0.62rem] font-semibold transition-transform duration-150 hover:-translate-y-0.5 ${
                   fur.id === f.id
-                    ? 'selected border-[#ffe17d] bg-[#ffe17d]/14 text-white shadow-[0_3px_0_#bba64e]'
+                    ? 'selected border-[#ffd166] bg-[#ffd166]/14 text-white shadow-[0_3px_0_#1b1929]'
                     : 'border-white/10 text-white/55 hover:border-[#ff9ebd]/70 hover:text-white'
                 }`}
               >
@@ -483,8 +483,8 @@ export function HeroPet() {
                 aria-pressed={expression === e.id}
                 className={`rounded-[14px] border-2 px-3 py-2 text-xs font-semibold transition-transform duration-200 hover:-translate-y-1 active:translate-y-0.5 ${
                   expression === e.id
-                    ? 'border-[#a3f3d1] bg-[#a3f3d1]/14 text-white shadow-[0_3px_0_#5aa889]'
-                    : 'border-white/10 text-white/55 hover:border-[#c4b5fd]/70 hover:text-white'
+                    ? 'border-[#a3f3d1] bg-[#a3f3d1]/14 text-white shadow-[0_3px_0_#1b1929]'
+                    : 'border-white/10 text-white/55 hover:border-[#a3f3d1]/70 hover:text-white'
                 }`}
               >
                 {e.label}
@@ -503,7 +503,7 @@ export function HeroPet() {
                 aria-pressed={accessories.has(a.id)}
                 className={`flex items-center gap-1 rounded-[14px] border-2 px-2.5 py-2 text-xs font-semibold transition-transform duration-200 hover:-translate-y-1 active:translate-y-0.5 ${
                   accessories.has(a.id)
-                    ? 'border-[#c4b5fd] bg-[#c4b5fd]/14 text-white shadow-[0_3px_0_#8975c5]'
+                    ? 'border-[#a3f3d1] bg-[#a3f3d1]/14 text-white shadow-[0_3px_0_#1b1929]'
                     : 'border-white/10 text-white/55 hover:border-[#ff9ebd]/70 hover:text-white'
                 }`}
               >
@@ -519,7 +519,7 @@ export function HeroPet() {
       <button
         type="button"
         onClick={adopt}
-        className="group relative inline-flex items-center gap-3 rounded-[14px] border border-[#d9f27c]/70 bg-[#d9f27c] px-7 py-3 font-semibold text-[0.68rem] tracking-[0.08em] text-[#08090e] shadow-[4px_4px_0_#879e42] transition-all duration-300 hover:-translate-y-1 hover:shadow-[7px_7px_0_#879e42] active:translate-y-0 active:shadow-[2px_2px_0_#879e42]"
+        className="group relative inline-flex items-center gap-3 rounded-[14px] border border-[#ffd166]/70 bg-[#ffd166] px-7 py-3 font-semibold text-[0.68rem] tracking-[0.08em] text-[#1b1929] shadow-[4px_4px_0_#1b1929] transition-all duration-300 hover:-translate-y-1 hover:shadow-[7px_7px_0_#1b1929] active:translate-y-0 active:shadow-[2px_2px_0_#1b1929]"
       >
         <span className="transition-transform duration-200 group-hover:scale-110">
           Adopt Pet
@@ -546,7 +546,7 @@ function ControlPanel({
   children: React.ReactNode
 }) {
   return (
-    <div className="control-panel rounded-[20px] border-2 border-white/12 bg-[#29243b] p-3 shadow-[4px_5px_0_rgba(11,8,20,.18)]">
+    <div className="control-panel rounded-[20px] border-2 border-white/12 bg-[#1b1929] p-3 shadow-[4px_5px_0_rgba(11,8,20,.18)]">
       <h3 className="mb-3 text-center ui-label text-white/40">
         {title}
       </h3>

@@ -10,7 +10,7 @@ export default function HomePage() {
       <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1500px] flex-col overflow-hidden px-4 pb-24 pt-4 sm:px-7 lg:px-10">
         <nav className="topbar flex items-center justify-between px-1 py-3 sm:px-2" aria-label="Primary navigation">
           <a href="#top" className="group flex items-center gap-3" aria-label="kittycats.cc home">
-            <span className="brand-mark grid h-10 w-10 place-items-center rounded-[15px] font-pixel text-[0.56rem] text-[#292033] transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">KC</span>
+            <span className="brand-mark grid h-10 w-10 place-items-center rounded-[15px] font-pixel text-[0.56rem] text-[#1b1929] transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">KC</span>
             <span className="ui-label text-white/85">kittycats.cc</span>
           </a>
           <div className="hidden items-center gap-7 sm:flex">
@@ -31,7 +31,7 @@ export default function HomePage() {
               Pick a color, add a little personality, and send your new pixel pal out into the world.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-4">
-              <a href="#build" className="magnetic-button inline-flex items-center gap-4 rounded-[16px] bg-[#ffe17d] px-5 py-3.5 font-semibold text-[0.72rem] tracking-[-0.01em] text-[#292033]">
+              <a href="#build" className="magnetic-button inline-flex items-center gap-4 rounded-[16px] bg-[#ffd166] px-5 py-3.5 font-semibold text-[0.72rem] tracking-[-0.01em] text-[#1b1929]">
                 Make my kitty <span aria-hidden="true" className="text-base leading-none">↘</span>
               </a>
               <span className="ui-label text-white/40">tiny, cute, yours</span>

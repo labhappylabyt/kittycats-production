@@ -180,19 +180,19 @@ export function CassettePlayer() {
 
       {/* Cassette body */}
       <div
-        className="relative my-2 flex w-full flex-col items-center rounded-[14px] border-2 border-white/12 bg-[#1e1b2e] p-4"
+        className="relative my-2 flex w-full flex-col items-center rounded-[14px] border-2 border-white/12 bg-[#1b1929] p-4"
       >
         {/* Reels */}
         <div className="flex w-full items-center justify-between px-6">
           <div
-            className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#ef83c7]/70 ${playing ? 'reel-spin' : ''}`}
+            className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#ff9ebd]/70 ${playing ? 'reel-spin' : ''}`}
           >
             <div className="h-5 w-5 rounded-full border border-white/70" />
             <div className="absolute h-px w-10 rotate-0 bg-white/60" />
           </div>
           <div className="mx-2 h-px flex-1 bg-white/30" />
           <div
-            className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#ef83c7]/70 ${playing ? 'reel-spin' : ''}`}
+            className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#ff9ebd]/70 ${playing ? 'reel-spin' : ''}`}
           >
             <div className="h-5 w-5 rounded-full border border-white/70" />
             <div className="absolute h-px w-10 bg-white/60" />
@@ -217,7 +217,7 @@ export function CassettePlayer() {
           type="button"
           onClick={() => switchTrack(-1)}
           aria-label="Previous track"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] transition-transform duration-150 hover:-translate-y-0.5 hover:border-[#ef83c7]/60 active:translate-y-0"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] transition-transform duration-150 hover:-translate-y-0.5 hover:border-[#ff9ebd]/60 active:translate-y-0"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
             <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
@@ -227,7 +227,7 @@ export function CassettePlayer() {
           type="button"
           onClick={togglePlay}
           aria-label={playing ? 'Pause' : 'Play'}
-          className="flex h-14 w-14 items-center justify-center rounded-full border border-[#ef83c7]/70 bg-[#ef83c7] text-[#0b0c12] shadow-[0_0_25px_rgba(239,131,199,0.2)] transition-transform duration-150 hover:-translate-y-0.5 hover:scale-105 active:translate-y-0"
+          className="flex h-14 w-14 items-center justify-center rounded-full border border-[#ff9ebd]/70 bg-[#ff9ebd] text-[#1b1929] shadow-[0_0_25px_rgba(239,131,199,0.2)] transition-transform duration-150 hover:-translate-y-0.5 hover:scale-105 active:translate-y-0"
         >
           {playing ? (
             <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden="true">
@@ -243,7 +243,7 @@ export function CassettePlayer() {
           type="button"
           onClick={() => switchTrack(1)}
           aria-label="Next track"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] transition-transform duration-150 hover:-translate-y-0.5 hover:border-[#ef83c7]/60 active:translate-y-0"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] transition-transform duration-150 hover:-translate-y-0.5 hover:border-[#ff9ebd]/60 active:translate-y-0"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
             <path d="M6 18l8.5-6L6 6v12zM16 6h2v12h-2V6z" />

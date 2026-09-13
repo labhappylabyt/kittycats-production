@@ -12,57 +12,58 @@ type Save = { version: 1; inventory: string[]; discoveries: Discovery[]; favorit
 const SAVE_KEY = 'kittycraft_save_v1'
 const ELEMENTS: Element[] = [
   { id: 'orange-tabby', name: 'Orange Tabby', emoji: '🐈', color: '#ff9ebd' },
-  { id: 'wizard-cap', name: 'Wizard Cap', emoji: '🧙', color: '#c4b5fd' },
+  { id: 'wizard-cap', name: 'Wizard Cap', emoji: '🧙', color: '#a3f3d1' },
   { id: 'mint', name: 'Mint', emoji: '🌿', color: '#a3f3d1' },
-  { id: 'moon', name: 'Moon', emoji: '🌙', color: '#ffe17d' },
-  { id: 'star', name: 'Star', emoji: '⭐', color: '#ffe17d' },
+  { id: 'moon', name: 'Moon', emoji: '🌙', color: '#ffd166' },
+  { id: 'star', name: 'Star', emoji: '⭐', color: '#ffd166' },
   { id: 'rainbow', name: 'Rainbow', emoji: '🌈', color: '#ff9ebd' },
   { id: 'fish-treat', name: 'Fish Treat', emoji: '🐟', color: '#a3f3d1' },
   { id: 'bowtie', name: 'Bowtie', emoji: '🎀', color: '#ff9ebd' },
-  { id: 'bubble', name: 'Bubble', emoji: '🫧', color: '#c4b5fd' },
-  { id: 'toast', name: 'Toast', emoji: '🍞', color: '#ffe17d' },
+  { id: 'bubble', name: 'Bubble', emoji: '🫧', color: '#a3f3d1' },
+  { id: 'toast', name: 'Toast', emoji: '🍞', color: '#ffd166' },
 ]
 const POOLS = [
-  ['Comet', '🌠', '#c4b5fd'], ['Bubblegum', '🫧', '#ff9ebd'], ['Sprout', '🌱', '#a3f3d1'], ['Moonbeam', '🌙', '#ffe17d'],
-  ['Pixel', '🐾', '#c4b5fd'], ['Jellybean', '🍬', '#ff9ebd'], ['Cloud', '☁️', '#a3f3d1'], ['Stardust', '✨', '#ffe17d'],
+  ['Comet', '🌠', '#a3f3d1'], ['Bubblegum', '🫧', '#ff9ebd'], ['Sprout', '🌱', '#a3f3d1'], ['Moonbeam', '🌙', '#ffd166'],
+  ['Pixel', '🐾', '#a3f3d1'], ['Jellybean', '🍬', '#ff9ebd'], ['Cloud', '☁️', '#a3f3d1'], ['Stardust', '✨', '#ffd166'],
 ]
 const RARITIES: Rarity[] = ['Common', 'Common', 'Rare', 'Rare', 'Cosmic', 'Mythic']
 const RECIPES: Record<string, [string, string, string, string, Rarity]> = {
-  'orange-tabby|wizard-cap': ['space-cosmic-cat', 'Cosmo Whiskers', '🐱', '#c4b5fd', 'Cosmic'],
+  'orange-tabby|wizard-cap': ['space-cosmic-cat', 'Cosmo Whiskers', '🐱', '#a3f3d1', 'Cosmic'],
   'mint|orange-tabby': ['garden-cat', 'Sprout Paws', '🐈', '#a3f3d1', 'Rare'],
-  'moon|orange-tabby': ['moon-cat', 'Luna Loaf', '🐈', '#ffe17d', 'Rare'],
-  'orange-tabby|star': ['star-cat', 'Star Pouncer', '🐱', '#ffe17d', 'Cosmic'],
+  'moon|orange-tabby': ['moon-cat', 'Luna Loaf', '🐈', '#ffd166', 'Rare'],
+  'orange-tabby|star': ['star-cat', 'Star Pouncer', '🐱', '#ffd166', 'Cosmic'],
   'bowtie|orange-tabby': ['party-cat', 'Fancy Beans', '🐈', '#ff9ebd', 'Common'],
   'fish-treat|orange-tabby': ['sushi-cat', 'Sushi Paws', '🐱', '#a3f3d1', 'Rare'],
-  'bubble|orange-tabby': ['bubble-cat', 'Bloop', '🐈', '#c4b5fd', 'Common'],
+  'bubble|orange-tabby': ['bubble-cat', 'Bloop', '🐈', '#a3f3d1', 'Common'],
   'rainbow|orange-tabby': ['rainbow-cat', 'Prism Paws', '🐱', '#ff9ebd', 'Cosmic'],
   'mint|wizard-cap': ['forest-witch', 'Moss Mage', '🐈', '#a3f3d1', 'Cosmic'],
-  'moon|wizard-cap': ['night-witch', 'Moon Magician', '🐱', '#c4b5fd', 'Mythic'],
-  'star|wizard-cap': ['star-wizard', 'Nova Neko', '🐈', '#ffe17d', 'Mythic'],
+  'moon|wizard-cap': ['night-witch', 'Moon Magician', '🐱', '#a3f3d1', 'Mythic'],
+  'star|wizard-cap': ['star-wizard', 'Nova Neko', '🐈', '#ffd166', 'Mythic'],
   'bowtie|wizard-cap': ['fancy-wizard', 'Tuxedo Mage', '🐱', '#ff9ebd', 'Rare'],
   'fish-treat|wizard-cap': ['spellfish', 'Fin Wizard', '🐈', '#a3f3d1', 'Rare'],
-  'bubble|wizard-cap': ['bubble-witch', 'Bubbly Mage', '🐱', '#c4b5fd', 'Cosmic'],
+  'bubble|wizard-cap': ['bubble-witch', 'Bubbly Mage', '🐱', '#a3f3d1', 'Cosmic'],
   'rainbow|wizard-cap': ['rainbow-wizard', 'Prism Merlin', '🐈', '#ff9ebd', 'Mythic'],
   'mint|moon': ['night-garden', 'Moon Sprout', '🐱', '#a3f3d1', 'Rare'],
-  'mint|star': ['star-sprout', 'Wish Leaf', '🐈', '#ffe17d', 'Cosmic'],
-  'moon|star': ['eclipse-cat', 'Eclipse', '🐱', '#c4b5fd', 'Mythic'],
+  'mint|star': ['star-sprout', 'Wish Leaf', '🐈', '#ffd166', 'Cosmic'],
+  'moon|star': ['eclipse-cat', 'Eclipse', '🐱', '#a3f3d1', 'Mythic'],
   'bowtie|mint': ['garden-party', 'Tea Time', '🐈', '#ff9ebd', 'Common'],
-  'bowtie|moon': ['moon-bow', 'Moon Ribbon', '🐱', '#ffe17d', 'Rare'],
+  'bowtie|moon': ['moon-bow', 'Moon Ribbon', '🐱', '#ffd166', 'Rare'],
   'bowtie|star': ['star-bow', 'Wish Wrapper', '🐈', '#ff9ebd', 'Cosmic'],
   'fish-treat|mint': ['pond-cat', 'Puddle Paws', '🐈', '#a3f3d1', 'Common'],
-  'fish-treat|moon': ['moonfish-cat', 'Tidepool', '🐱', '#c4b5fd', 'Rare'],
-  'fish-treat|star': ['comet-fish', 'Comet Koi', '🐈', '#ffe17d', 'Cosmic'],
+  'fish-treat|moon': ['moonfish-cat', 'Tidepool', '🐱', '#a3f3d1', 'Rare'],
+  'fish-treat|star': ['comet-fish', 'Comet Koi', '🐈', '#ffd166', 'Cosmic'],
   'bubble|mint': ['soap-cat', 'Soapy', '🐱', '#a3f3d1', 'Common'],
-  'bubble|moon': ['moon-bubble', 'Orbit Bubbles', '🐈', '#c4b5fd', 'Rare'],
-  'bubble|star': ['star-bubble', 'Wish Bubble', '🐱', '#ffe17d', 'Cosmic'],
+  'bubble|moon': ['moon-bubble', 'Orbit Bubbles', '🐈', '#a3f3d1', 'Rare'],
+  'bubble|star': ['star-bubble', 'Wish Bubble', '🐱', '#ffd166', 'Cosmic'],
   'rainbow|mint': ['rainbow-garden', 'Color Sprout', '🐈', '#ff9ebd', 'Rare'],
-  'rainbow|moon': ['rainbow-moon', 'Aurora Paws', '🐱', '#c4b5fd', 'Cosmic'],
-  'rainbow|star': ['rainbow-star', 'Supernova', '🐈', '#ffe17d', 'Mythic'],
-  'toast|orange-tabby': ['breakfast-cat', 'Toast Toes', '🐈', '#ffe17d', 'Common'],
-  'toast|wizard-cap': ['toast-wizard', 'Crumb Mage', '🐱', '#ffe17d', 'Rare'],
+  'rainbow|moon': ['rainbow-moon', 'Aurora Paws', '🐱', '#a3f3d1', 'Cosmic'],
+  'rainbow|star': ['rainbow-star', 'Supernova', '🐈', '#ffd166', 'Mythic'],
+  'toast|orange-tabby': ['breakfast-cat', 'Toast Toes', '🐈', '#ffd166', 'Common'],
+  'toast|wizard-cap': ['toast-wizard', 'Crumb Mage', '🐱', '#ffd166', 'Rare'],
 }
 
-const elementById = (id: string): Element => ELEMENTS.find((element) => element.id === id) ?? { id, name: id, emoji: '🐾', color: '#c4b5fd' }
+const humanizeId = (id: string) => id.split('-').map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ')
+const elementById = (id: string): Element => ELEMENTS.find((element) => element.id === id) ?? { id, name: humanizeId(id), emoji: '🐾', color: '#a3f3d1' }
 const recipeKey = (a: string, b: string) => [a, b].sort().join('|')
 const hash = (value: string) => [...value].reduce((total, char) => ((total * 31) + char.charCodeAt(0)) >>> 0, 7)
 
@@ -110,6 +111,10 @@ export function InfiniteKittyCraft() {
   }, [])
 
   const selectedElements = useMemo(() => selected.map(elementById), [selected])
+  const itemForId = (id: string): Element => {
+    const discovery = discoveries.find((item) => item.id === id)
+    return discovery ? { id, name: discovery.nickname || discovery.name, emoji: discovery.emoji, color: discovery.color } : elementById(id)
+  }
   const discover = () => {
     if (selected.length !== 2) return
     const result = createDiscovery(selected[0], selected[1])
@@ -130,7 +135,7 @@ export function InfiniteKittyCraft() {
     const canvas = canvasRef.current ?? document.createElement('canvas')
     canvas.width = 640; canvas.height = 640
     const ctx = canvas.getContext('2d'); if (!ctx || !reveal) return
-    ctx.fillStyle = '#1e1b2e'; ctx.fillRect(0, 0, 640, 640)
+    ctx.fillStyle = '#1b1929'; ctx.fillRect(0, 0, 640, 640)
     ctx.font = '180px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(reveal.emoji, 320, 350)
     ctx.font = 'bold 36px sans-serif'; ctx.fillStyle = '#fff8fb'; ctx.fillText(nickname || reveal.name, 320, 470)
     ctx.font = '22px sans-serif'; ctx.fillStyle = reveal.color; ctx.fillText(`${reveal.rarity} discovery`, 320, 515)
@@ -147,7 +152,7 @@ export function InfiniteKittyCraft() {
       <header className="craft-nav"><a href="/" className="craft-logo"><span className="brand-mark">KC</span><span>Infinite Kitty Craft</span></a><nav><a href="/labs">Kitty Lab</a><button type="button" onClick={() => setCodexOpen(true)}>Codex <b>{discoveries.length}</b></button></nav></header>
       <section className="craft-hero"><div><p className="section-kicker"><span className="status-dot" />A tiny alchemy playground</p><h1 className="display-title">infinite<br /><span>kitty craft.</span></h1><p>Mix two little things. Discover one brand-new companion. There are no wrong combinations here.</p></div><div className="craft-sticker">∞<small>every combo<br />makes a kitty</small></div></section>
       <section className="craft-layout">
-        <aside className="inventory-panel"><div className="craft-panel-title"><span>Inventory</span><small>{inventory.length} finds</small></div><div className="inventory-list">{inventory.map((id) => { const item = elementById(id); return <button key={id} type="button" draggable onDragStart={() => setDragging(id)} onDragEnd={() => setDragging(null)} onClick={() => choose(id)} className={`inventory-item ${selected.includes(id) ? 'is-selected' : ''} ${dragging === id ? 'is-dragging' : ''}`}><span className="inventory-emoji" style={{ background: item.color }}>{item.emoji}</span><span>{item.name}</span></button> })}</div></aside>
+        <aside className="inventory-panel"><div className="craft-panel-title"><span>Inventory</span><small>{inventory.length} finds</small></div><div className="inventory-list">{inventory.map((id) => { const item = itemForId(id); return <button key={id} type="button" draggable onDragStart={() => setDragging(id)} onDragEnd={() => setDragging(null)} onClick={() => choose(id)} className={`inventory-item ${selected.includes(id) ? 'is-selected' : ''} ${dragging === id ? 'is-dragging' : ''}`}><span className="inventory-emoji" style={{ background: item.color }}>{item.emoji}</span><span>{item.name}</span></button> })}</div></aside>
         <section className={`synthesis-zone ${selected.length === 2 ? 'can-combine' : ''}`} onDragOver={(event) => event.preventDefault()} onDrop={() => dragging && drop(dragging)}>
           <div className="zone-label">Synthesis lab <span>drop or tap two</span></div><div className="drop-slots"><div className={`drop-slot ${selected[0] ? 'filled' : ''}`}>{selected[0] ? <span>{elementById(selected[0]).emoji}</span> : '+'}</div><div className="plus-sign">+</div><div className={`drop-slot ${selected[1] ? 'filled' : ''}`}>{selected[1] ? <span>{elementById(selected[1]).emoji}</span> : '+'}</div></div><button type="button" className="combine-button" disabled={selected.length !== 2} onClick={discover}>Combine magic <span>✦</span></button><p className="hint">Every pairing makes something new.</p>
         </section>

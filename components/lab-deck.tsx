@@ -16,7 +16,7 @@ export function LabDeck() {
           ))}
         </div>
       </div>
-      <div className="mt-5 ml-auto max-w-[280px] rounded-[20px] border-2 border-white/10 bg-[#29243b] p-3 shadow-[4px_5px_0_rgba(0,0,0,.18)]">
+      <div className="mt-5 ml-auto max-w-[280px] rounded-[20px] border-2 border-white/10 bg-[#1b1929] p-3 shadow-[4px_5px_0_rgba(0,0,0,.18)]">
         <CassettePlayer />
       </div>
     </section>

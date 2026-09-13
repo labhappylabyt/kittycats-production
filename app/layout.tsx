@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: 'kittycats.cc — Make a tiny companion', description: 'Make a pixel kitty and send them out into the world.', images: ['/placeholder.jpg'] },
 }
 
-export const viewport: Viewport = { colorScheme: 'dark', themeColor: '#1e1b2e' }
+export const viewport: Viewport = { colorScheme: 'dark', themeColor: '#1b1929' }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

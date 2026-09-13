@@ -2,8 +2,6 @@
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { AmbientCanvas } from './ambient-canvas'
-import { PawCursor } from './paw-cursor'
 import { SmoothScroll } from './smooth-scroll'
 
 function KineticLoader() {
@@ -40,15 +38,13 @@ function KineticLoader() {
     <AnimatePresence>
       {visible && (
         <motion.section
-          className="cinematic-loader fixed inset-0 z-[10000] flex min-h-screen items-center justify-center overflow-hidden bg-[#08090e] px-6 text-[#f5f2ff]"
+          className="cinematic-loader fixed inset-0 z-[10000] flex min-h-screen items-center justify-center overflow-hidden bg-[#1b1929] px-6 text-[#ffd166]"
           initial={{ opacity: 1 }}
           exit={{ clipPath: 'inset(0 0 100% 0)', opacity: 0 }}
           transition={{ duration: reducedMotion ? 0.18 : 0.9, ease: [0.76, 0, 0.24, 1] }}
           aria-label="Loading kittycats.cc"
           role="status"
         >
-          <div className="loader-orb loader-orb-one" aria-hidden="true" />
-          <div className="loader-orb loader-orb-two" aria-hidden="true" />
           <motion.div
             className="relative z-10 flex w-full max-w-3xl flex-col gap-7"
             initial={{ y: 24, opacity: 0 }}
@@ -65,13 +61,13 @@ function KineticLoader() {
               </div>
             </div>
             <div className="flex items-end gap-5">
-              <span className="font-mono text-4xl tabular-nums tracking-[-0.08em] text-[#d8ff6a] sm:text-5xl">
+              <span className="font-mono text-4xl tabular-nums tracking-[-0.08em] text-[#ffd166] sm:text-5xl">
                 {String(progress).padStart(3, '0')}
               </span>
               <div className="mb-2 h-px flex-1 overflow-hidden bg-white/15">
                 <motion.div
-                  className="h-full bg-[#d8ff6a]"
-                  animate={{ width: `${progress}%` }}
+                  className="h-full origin-left bg-[#a3f3d1]"
+                  animate={{ scaleX: progress / 100 }}
                   transition={{ duration: 0.12, ease: 'easeOut' }}
                 />
               </div>
@@ -87,8 +83,6 @@ function KineticLoader() {
 export function CinematicShell({ children }: { children: React.ReactNode }) {
   return (
     <SmoothScroll>
-      <AmbientCanvas />
-      <PawCursor />
       <KineticLoader />
       {children}
     </SmoothScroll>
