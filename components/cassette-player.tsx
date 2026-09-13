@@ -167,24 +167,20 @@ export function CassettePlayer() {
 
   return (
     <div
-      className="relative flex h-full w-full flex-col items-center justify-between overflow-hidden border border-[#ef83c7]/40 p-6 shadow-[0_22px_55px_rgba(239,131,199,0.11)]"
-      style={{
-        background: 'radial-gradient(circle at 18% 8%, rgba(239,131,199,0.34), transparent 34%), linear-gradient(145deg, rgba(28,29,42,0.98), rgba(9,10,15,0.98))',
-        color: '#f5f2ff',
-      }}
+      className="retro-player relative flex h-full w-full flex-col items-center justify-between overflow-hidden border-2 border-[#ff9ebd]/55 p-5"
     >
       <div className="flex w-full items-center justify-between">
-        <span className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.17em] text-white/75">
+        <span className="font-pixel text-[0.55rem] font-semibold tracking-[0.08em] text-white/75">
           Fav Song
         </span>
-        <span className="font-mono text-[0.52rem] font-bold uppercase tracking-wider text-white/40">
+        <span className="font-pixel text-[0.48rem] font-bold tracking-[0.05em] text-white/40">
           Cassette
         </span>
       </div>
 
       {/* Cassette body */}
       <div
-        className="relative my-2 flex w-full flex-col items-center border border-white/12 bg-white/[0.04] p-4"
+        className="relative my-2 flex w-full flex-col items-center rounded-[14px] border-2 border-white/12 bg-[#1e1b2e] p-4"
       >
         {/* Reels */}
         <div className="flex w-full items-center justify-between px-6">
@@ -211,10 +207,7 @@ export function CassettePlayer() {
 
         {/* Progress bar */}
         <div className="mt-3 h-px w-full overflow-hidden bg-white/15">
-          <div
-            className="h-full bg-[#ef83c7] transition-[width] duration-75"
-            style={{ width: `${progress}%` }}
-          />
+          <div className="h-full origin-left bg-[#ff9ebd] transition-transform duration-75" style={{ transform: `scaleX(${progress / 100})` }} />
         </div>
       </div>
 

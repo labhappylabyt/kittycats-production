@@ -53,6 +53,7 @@ export function HeroPet() {
   const [expression, setExpression] = useState<Expression>('happy')
   const [accessories, setAccessories] = useState<Set<Accessory>>(new Set())
   const [toast, setToast] = useState(false)
+  const [adopted, setAdopted] = useState(false)
 
   const stageRef = useRef<HTMLDivElement | null>(null)
   const petWrapRef = useRef<HTMLDivElement | null>(null)
@@ -344,6 +345,7 @@ export function HeroPet() {
       playAdopt()
     }
     spawnConfetti()
+    setAdopted(true)
 
     setToast(true)
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
@@ -406,7 +408,7 @@ export function HeroPet() {
           ref={purrLayerRef}
           className="pointer-events-none absolute inset-0 overflow-visible"
         />
-        <div ref={petWrapRef}>
+        <div ref={petWrapRef} className="pet-idle">
           <PixelPet
             ref={svgRef}
             fur={fur}
@@ -429,6 +431,22 @@ export function HeroPet() {
         Pet Adopted!
       </div>
 
+      {adopted && (
+        <div className="adoption-card" role="dialog" aria-label="Kitty adopted">
+          <div className="adoption-card-heading"><span className="status-dot" />Your kitty is ready</div>
+          <p className="adoption-card-copy">Send this tiny pal into the world.</p>
+          <div className="adoption-actions">
+            <button type="button" className="adoption-action adoption-action-primary" onClick={adopt}>Download card</button>
+            <button type="button" className="adoption-action" onClick={async () => {
+              const url = `${window.location.origin}/?kitty=${encodeURIComponent(fur.id)}&mood=${encodeURIComponent(expression)}`
+              try { await navigator.clipboard.writeText(url); setToast(true) } catch { /* clipboard unavailable */ }
+            }}>Copy share URL</button>
+            <button type="button" className="adoption-action" onClick={adopt}>Export PNG</button>
+          </div>
+          <button type="button" className="adoption-close" onClick={() => setAdopted(false)}>Maybe later</button>
+        </div>
+      )}
+
       {/* Controls */}
       <div className="grid w-full gap-3 sm:grid-cols-3">
         <ControlPanel title="Fur Color">
@@ -439,14 +457,14 @@ export function HeroPet() {
                 type="button"
                 onClick={() => pickFur(f)}
                 aria-pressed={fur.id === f.id}
-                className={`flex items-center gap-2 rounded-[10px] border px-2.5 py-1.5 text-xs font-semibold transition-transform duration-150 hover:-translate-y-0.5 ${
+                className={`fur-swatch flex flex-col items-center gap-1 rounded-[14px] border-2 px-2 py-2 text-[0.62rem] font-semibold transition-transform duration-150 hover:-translate-y-0.5 ${
                   fur.id === f.id
-                    ? 'border-[#d9f27c]/70 bg-[#d9f27c]/12 text-white shadow-[3px_3px_0_rgba(0,0,0,.16)]'
-                    : 'border-transparent text-white/45 hover:border-white/15 hover:text-white'
+                    ? 'selected border-[#ffe17d] bg-[#ffe17d]/14 text-white shadow-[0_3px_0_#bba64e]'
+                    : 'border-white/10 text-white/55 hover:border-[#ff9ebd]/70 hover:text-white'
                 }`}
               >
                 <span
-                  className="h-4 w-4 rounded border border-foreground/40"
+                  className="h-7 w-7 rounded-[10px] border-2 border-white/35"
                   style={{ background: f.body }}
                 />
                 {f.label}
@@ -463,10 +481,10 @@ export function HeroPet() {
                 type="button"
                 onClick={() => pickExpression(e.id)}
                 aria-pressed={expression === e.id}
-                className={`rounded-[10px] border px-3 py-1.5 text-xs font-semibold transition-transform duration-150 hover:-translate-y-0.5 ${
+                className={`rounded-[14px] border-2 px-3 py-2 text-xs font-semibold transition-transform duration-200 hover:-translate-y-1 active:translate-y-0.5 ${
                   expression === e.id
-                    ? 'border-[#d9f27c]/70 bg-[#d9f27c]/12 text-white shadow-[3px_3px_0_rgba(0,0,0,.16)]'
-                    : 'border-transparent text-white/45 hover:border-white/15 hover:text-white'
+                    ? 'border-[#a3f3d1] bg-[#a3f3d1]/14 text-white shadow-[0_3px_0_#5aa889]'
+                    : 'border-white/10 text-white/55 hover:border-[#c4b5fd]/70 hover:text-white'
                 }`}
               >
                 {e.label}
@@ -483,10 +501,10 @@ export function HeroPet() {
                 type="button"
                 onClick={() => toggleAccessory(a.id)}
                 aria-pressed={accessories.has(a.id)}
-                className={`flex items-center gap-1 rounded-[10px] border px-2.5 py-1.5 text-xs font-semibold transition-transform duration-150 hover:-translate-y-0.5 ${
+                className={`flex items-center gap-1 rounded-[14px] border-2 px-2.5 py-2 text-xs font-semibold transition-transform duration-200 hover:-translate-y-1 active:translate-y-0.5 ${
                   accessories.has(a.id)
-                    ? 'border-[#d9f27c]/70 bg-[#d9f27c]/12 text-white shadow-[3px_3px_0_rgba(0,0,0,.16)]'
-                    : 'border-transparent text-white/45 hover:border-white/15 hover:text-white'
+                    ? 'border-[#c4b5fd] bg-[#c4b5fd]/14 text-white shadow-[0_3px_0_#8975c5]'
+                    : 'border-white/10 text-white/55 hover:border-[#ff9ebd]/70 hover:text-white'
                 }`}
               >
                 <span aria-hidden="true">{a.emoji}</span>
@@ -528,7 +546,7 @@ function ControlPanel({
   children: React.ReactNode
 }) {
   return (
-    <div className="rounded-[14px] border border-white/10 bg-[#1c2022] p-3 shadow-[3px_3px_0_rgba(0,0,0,.14)]">
+    <div className="control-panel rounded-[20px] border-2 border-white/12 bg-[#29243b] p-3 shadow-[4px_5px_0_rgba(11,8,20,.18)]">
       <h3 className="mb-3 text-center ui-label text-white/40">
         {title}
       </h3>
