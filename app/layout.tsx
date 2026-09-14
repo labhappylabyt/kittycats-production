@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from 'next'
-import { DM_Sans, Fredoka, Silkscreen } from 'next/font/google'
+import { DM_Sans, Fredoka } from 'next/font/google'
 import { CinematicShell } from '@/components/cinematic-shell'
 import './globals.css'
 
 const ui = DM_Sans({ subsets: ['latin'], variable: '--font-ui', weight: ['400', '500', '600', '700'] })
 const display = Fredoka({ subsets: ['latin'], variable: '--font-display', weight: ['500', '600', '700'] })
-const pixel = Silkscreen({ subsets: ['latin'], variable: '--font-pixel', weight: ['400', '700'], display: 'swap' })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://kittycats.cc'),
@@ -21,7 +20,7 @@ export const viewport: Viewport = { colorScheme: 'dark', themeColor: '#1b1929' }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`dark ${ui.variable} ${display.variable} ${pixel.variable}`}>
+    <html lang="en" className={`dark ${ui.variable} ${display.variable}`}>
       <body className="relative min-h-screen antialiased">
         <CinematicShell>{children}</CinematicShell>
         <footer className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-5 pb-4">

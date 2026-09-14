@@ -74,6 +74,62 @@ export function playChime() {
   tone(1318.51, 0.16, 0.16, 'triangle', 0.06)
 }
 
+// Pickup: quick two-step blip that lands as the lift starts.
+export function playPickup() {
+  tone(520, 0, 0.035, 'sine', 0.035)
+  tone(780, 0.02, 0.05, 'sine', 0.03)
+}
+
+// Merge payoff: low-to-high glide that lands exactly as the merge settles.
+export function playMerge() {
+  const audioContext = getCtx()
+  if (!audioContext) return
+  const oscillator = audioContext.createOscillator()
+  const gain = audioContext.createGain()
+  oscillator.type = 'triangle'
+  oscillator.frequency.setValueAtTime(220, audioContext.currentTime)
+  oscillator.frequency.exponentialRampToValueAtTime(660, audioContext.currentTime + 0.16)
+  gain.gain.setValueAtTime(0.0001, audioContext.currentTime)
+  gain.gain.exponentialRampToValueAtTime(0.05, audioContext.currentTime + 0.02)
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.22)
+  oscillator.connect(gain)
+  gain.connect(audioContext.destination)
+  oscillator.start()
+  oscillator.stop(audioContext.currentTime + 0.24)
+}
+
+// Repeat-combine: a warm little pop chime.
+export function playDiscoverRepeat() {
+  tone(784, 0, 0.07, 'triangle', 0.05)
+  tone(1046.5, 0.06, 0.09, 'triangle', 0.045)
+}
+
+// First-time discovery: a rising four-note fanfare, bigger than a repeat.
+export function playDiscoverFirst() {
+  const notes: Array<[number, number, number]> = [
+    [523.25, 0, 0.11],
+    [659.25, 0.09, 0.11],
+    [783.99, 0.18, 0.12],
+    [1046.5, 0.27, 0.2],
+  ]
+  notes.forEach(([frequency, start, duration]) => tone(frequency, start, duration, 'triangle', 0.06))
+  tone(2093, 0.27, 0.24, 'sine', 0.03)
+}
+
+// Mythic-only chime: five-note arpeggio with a shimmering octave pair.
+export function playMythic() {
+  const notes: Array<[number, number]> = [
+    [523.25, 0],
+    [659.25, 0.09],
+    [783.99, 0.18],
+    [1046.5, 0.27],
+    [1318.51, 0.36],
+  ]
+  notes.forEach(([frequency, start]) => tone(frequency, start, 0.24, 'triangle', 0.065))
+  tone(2637.02, 0.36, 0.4, 'sine', 0.028)
+  tone(2637.02 * 0.75, 0.45, 0.34, 'sine', 0.02)
+}
+
 export function playPurr() {
   const audioContext = getCtx()
   if (!audioContext) return
