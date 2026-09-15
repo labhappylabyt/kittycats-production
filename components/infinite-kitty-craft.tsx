@@ -325,7 +325,7 @@ export function InfiniteKittyCraft() {
       <section className="craft-hero">
         <div>
           <p className="section-kicker"><span className="status-dot" />A tiny alchemy playground</p>
-          <h1 className="display-title">infinite<br /><span>kitty craft.</span></h1>
+          <h1 className="display-title">infinite<br /><span className="hero-pill"><span>kitty craft.</span></span></h1>
           <p>Mix anything with anything. Tier up from ingredients to companions, then send your discoveries back into the lab.</p>
         </div>
         <div className="craft-sticker">∞<small>every combo<br />makes a kitty</small></div>
@@ -352,6 +352,8 @@ export function InfiniteKittyCraft() {
                   whileHover={phase === 'idle' && !isSelected ? { y: -3, scale: 1.02 } : undefined}
                   whileTap={{ scale: 0.96 }}
                   transition={SPRING_SOFT}
+                  initial={{ scale: 0.85, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
                   onClick={() => choose(id)}
                   className={`inventory-item ${isSelected ? 'is-selected' : ''} ${dragging === id ? 'is-dragging' : ''}`}
                 >
@@ -576,7 +578,7 @@ export function InfiniteKittyCraft() {
               onClick={(event) => event.stopPropagation()}
               initial={revealOrigin ? { x: revealOrigin.dx, y: revealOrigin.dy, scale: 0.15, opacity: 0 } : { opacity: 0 }}
               animate={revealOrigin ? { x: 0, y: 0, scale: 1, opacity: 1 } : { opacity: 0 }}
-              exit={{ x: revealOrigin?.dx ?? 0, y: revealOrigin?.dy ?? 0, scale: 0.15, opacity: 0, transition: { duration: 0.26, ease: 'easeIn' } }}
+              exit={{ x: revealOrigin?.dx ?? 0, y: revealOrigin?.dy ?? 0, scale: 0.15, opacity: 0, transition: { type: 'spring', stiffness: 300, damping: 27 } }}
               transition={{ type: 'spring', stiffness: 320, damping: 27 }}
               role="dialog"
               aria-label="Discovery card"

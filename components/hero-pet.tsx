@@ -396,7 +396,7 @@ export function HeroPet() {
       {/* Live preview stage */}
       <div
         ref={stageRef}
-        className="relative flex h-64 w-64 items-center justify-center overflow-hidden rounded-[34px] border border-white/14 bg-[#171a1c] p-4 shadow-[inset_0_0_50px_rgba(255,255,255,0.04),8px_8px_0_rgba(0,0,0,0.18)] sm:h-80 sm:w-80"
+        className="relative flex h-64 w-64 items-center justify-center overflow-hidden rounded-[34px] border border-white/14 bg-[#1b1929] p-4 shadow-[8px_8px_0_rgba(0,0,0,0.18)] sm:h-80 sm:w-80"
       >
         <div className="pointer-events-none absolute inset-4 rounded-[26px] border border-white/6" aria-hidden="true" />
         <div className="pointer-events-none absolute h-[86%] w-[86%] rounded-[28px] border border-[#ffd166]/12" aria-hidden="true" />
@@ -460,7 +460,7 @@ export function HeroPet() {
                 className={`fur-swatch flex flex-col items-center gap-1 rounded-[14px] border-2 px-2 py-2 text-[0.62rem] font-semibold transition-transform duration-150 hover:-translate-y-0.5 ${
                   fur.id === f.id
                     ? 'selected border-[#ffd166] bg-[#ffd166]/14 text-white shadow-[0_3px_0_#1b1929]'
-                    : 'border-white/10 text-white/55 hover:border-[#ff9ebd]/70 hover:text-white'
+                    : 'border-white/10 text-white/85 hover:border-[#ff9ebd]/70 hover:text-white'
                 }`}
               >
                 <span
@@ -484,7 +484,7 @@ export function HeroPet() {
                 className={`rounded-[14px] border-2 px-3 py-2 text-xs font-semibold transition-transform duration-200 hover:-translate-y-1 active:translate-y-0.5 ${
                   expression === e.id
                     ? 'border-[#a3f3d1] bg-[#a3f3d1]/14 text-white shadow-[0_3px_0_#1b1929]'
-                    : 'border-white/10 text-white/55 hover:border-[#a3f3d1]/70 hover:text-white'
+                    : 'border-white/10 text-white/85 hover:border-[#a3f3d1]/70 hover:text-white'
                 }`}
               >
                 {e.label}
@@ -504,7 +504,7 @@ export function HeroPet() {
                 className={`flex items-center gap-1 rounded-[14px] border-2 px-2.5 py-2 text-xs font-semibold transition-transform duration-200 hover:-translate-y-1 active:translate-y-0.5 ${
                   accessories.has(a.id)
                     ? 'border-[#a3f3d1] bg-[#a3f3d1]/14 text-white shadow-[0_3px_0_#1b1929]'
-                    : 'border-white/10 text-white/55 hover:border-[#ff9ebd]/70 hover:text-white'
+                    : 'border-white/10 text-white/85 hover:border-[#ff9ebd]/70 hover:text-white'
                 }`}
               >
                 <span aria-hidden="true">{a.emoji}</span>
@@ -547,7 +547,7 @@ function ControlPanel({
 }) {
   return (
     <div className="control-panel rounded-[20px] border-2 border-white/12 bg-[#1b1929] p-3 shadow-[4px_5px_0_rgba(11,8,20,.18)]">
-      <h3 className="mb-3 text-center ui-label text-white/40">
+      <h3 className="mb-3 text-center ui-label text-white/70">
         {title}
       </h3>
       {children}

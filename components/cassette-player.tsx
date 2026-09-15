@@ -202,7 +202,7 @@ export function CassettePlayer() {
         {/* Track info */}
         <div className="mt-3 text-center">
           <div className="text-sm font-semibold leading-tight text-white">{track.title}</div>
-          <div className="font-mono text-[0.58rem] uppercase tracking-[0.12em] text-white/45">by {track.artist}</div>
+          <div className="ui-label text-white/70">by {track.artist}</div>
         </div>
 
         {/* Progress bar */}
@@ -219,25 +219,15 @@ export function CassettePlayer() {
           aria-label="Previous track"
           className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] transition-transform duration-150 hover:-translate-y-0.5 hover:border-[#ff9ebd]/60 active:translate-y-0"
         >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
-            <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
-          </svg>
+          <span aria-hidden="true" className="text-[1.05rem] leading-none">«</span>
         </button>
         <button
           type="button"
           onClick={togglePlay}
           aria-label={playing ? 'Pause' : 'Play'}
-          className="flex h-14 w-14 items-center justify-center rounded-full border border-[#ff9ebd]/70 bg-[#ff9ebd] text-[#1b1929] shadow-[0_0_25px_rgba(239,131,199,0.2)] transition-transform duration-150 hover:-translate-y-0.5 hover:scale-105 active:translate-y-0"
+          className="flex h-14 w-14 items-center justify-center rounded-full border border-[#ff9ebd]/70 bg-[#ff9ebd] text-[#1b1929] shadow-[4px_5px_0_rgba(11,8,20,.35)] transition-transform duration-150 hover:-translate-y-0.5 hover:scale-105 active:translate-y-0"
         >
-          {playing ? (
-            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden="true">
-              <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-            </svg>
-          ) : (
-            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden="true">
-              <path d="M8 5v14l11-7L8 5z" />
-            </svg>
-          )}
+          {playing ? <span aria-hidden="true" className="text-[1.1rem] leading-none">❚❚</span> : <span aria-hidden="true" className="text-[1.1rem] leading-none">{'▶\uFE0E'}</span>}
         </button>
         <button
           type="button"
@@ -245,9 +235,7 @@ export function CassettePlayer() {
           aria-label="Next track"
           className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] transition-transform duration-150 hover:-translate-y-0.5 hover:border-[#ff9ebd]/60 active:translate-y-0"
         >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
-            <path d="M6 18l8.5-6L6 6v12zM16 6h2v12h-2V6z" />
-          </svg>
+          <span aria-hidden="true" className="text-[1.05rem] leading-none">»</span>
         </button>
       </div>
     </div>

@@ -415,7 +415,7 @@ function HeartAura() {
     [8, 16, '#ff9ecb'],
   ]
   return (
-    <g className="animate-pulse">
+    <g className="pet-soft">
       {hearts.map(([x, y, c], i) => (
         <g key={i} transform={`translate(${x * CELL}, ${y * CELL})`}>
           <rect x={0} y={CELL} width={CELL} height={CELL} fill={c} />

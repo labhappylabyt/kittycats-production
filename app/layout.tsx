@@ -24,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="relative min-h-screen antialiased">
         <CinematicShell>{children}</CinematicShell>
         <footer className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-5 pb-4">
-          <span className="ui-label text-white/35">© 2026 kittycats.cc · made with care</span>
+          <span className="ui-label text-white/60">© 2026 kittycats.cc · made with care</span>
         </footer>
       </body>
     </html>

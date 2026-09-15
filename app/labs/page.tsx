@@ -18,30 +18,30 @@ export default function HomePage() {
             <a className="nav-link" href="#signals">Friends</a>
             <a className="nav-link" href="#contact">Say hello</a>
           </div>
-          <span className="ui-label text-white/45">made for fun</span>
+          <span className="ui-label text-white/70">made for fun</span>
         </nav>
 
         <section id="top" className="relative grid flex-1 items-center gap-10 pb-16 pt-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:pt-24">
           <div className="relative z-10 flex flex-col items-start">
             <div className="section-kicker mb-7"><span className="status-dot" />A tiny corner of the internet</div>
             <h1 className="display-title max-w-3xl text-[clamp(4.5rem,10vw,9rem)] leading-[0.9] tracking-[-0.045em] text-[#fff8fb]">
-              make a<br /><span className="title-accent">kitty.</span>
+              make a<br /><span className="hero-pill"><span>kitty.</span></span>
             </h1>
-            <p className="mt-10 max-w-md text-pretty text-base leading-7 text-white/65 sm:text-lg">
+            <p className="mt-10 max-w-md text-pretty text-base leading-7 text-white/85 sm:text-lg">
               Pick a color, add a little personality, and send your new pixel pal out into the world.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <a href="#build" className="magnetic-button inline-flex items-center gap-4 rounded-[16px] bg-[#ffd166] px-5 py-3.5 font-semibold text-[0.72rem] tracking-[-0.01em] text-[#1b1929]">
                 Make my kitty <span aria-hidden="true" className="text-base leading-none">↘</span>
               </a>
-              <span className="ui-label text-white/40">tiny, cute, yours</span>
+              <span className="ui-label text-white/70">tiny, cute, yours</span>
             </div>
           </div>
 
           <div id="build" className="relative mx-auto w-full max-w-xl lg:max-w-none">
             <div className="pet-frame relative p-2 sm:p-3">
-              <div className="absolute left-5 top-5 z-10 section-kicker text-white/55">Your new friend</div>
-              <div className="absolute bottom-5 right-5 z-10 hidden ui-label text-white/40 sm:block">click to say hi</div>
+              <div className="absolute left-5 top-5 z-10 section-kicker text-white/85">Your new friend</div>
+              <div className="absolute bottom-5 right-5 z-10 hidden ui-label text-white/70 sm:block">click to say hi</div>
               <HeroPet />
             </div>
           </div>
@@ -53,7 +53,7 @@ export default function HomePage() {
               <p className="section-kicker">Come hang out</p>
               <h2 className="display-title mt-3 text-5xl tracking-[-0.04em] text-[#fff8fb] sm:text-7xl">say hello</h2>
             </div>
-            <p className="max-w-xs text-sm leading-6 text-white/55 md:text-right">A few friendly places where the kitty is out and about.</p>
+            <p className="max-w-xs text-sm leading-6 text-white/80 md:text-right">A few friendly places where the kitty is out and about.</p>
           </div>
           <LabDeck />
         </section>
@@ -63,8 +63,7 @@ export default function HomePage() {
             <p className="section-kicker">One more thing</p>
             <h2 className="display-title mt-3 max-w-xl text-5xl leading-[0.95] tracking-[-0.04em] text-[#fff8fb] sm:text-7xl">drop a note.</h2>
           </div>
-          <div className="flex flex-col items-start gap-3 sm:items-end">
-            <span className="ui-label text-white/45">or just say hi</span>
+          <div className="flex flex-col items-start gap-3 sm:items-end">              <span className="ui-label text-white/70">or just say hi</span>
             <ContactChip email="contact@kittycats.cc" />
           </div>
         </section>
