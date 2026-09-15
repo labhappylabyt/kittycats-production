@@ -39,7 +39,7 @@ export function Card({ social }: { social: Social; index: number }) {
         <span className="marquee-icon" style={{ color: social.color }}><Icon className="h-5 w-5 pointer-events-none" /></span>
         <span className="min-w-0">
           <span className="block truncate text-[0.82rem] font-bold tracking-[-0.02em] text-white">{social.handle}</span>
-          <span className="ui-label text-white/45">{social.name}</span>
+          <span className="ui-label text-white/70">{social.name}</span>
         </span>
         {social.status && <span className="marquee-status" style={{ color: social.color }}>{social.status}</span>}
       </div>

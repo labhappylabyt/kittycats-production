@@ -51,7 +51,7 @@ function KineticLoader() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="flex items-center justify-between font-mono text-[0.62rem] uppercase tracking-[0.24em] text-white/50">
+            <div className="flex items-center justify-between text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-white/70">
               <span>Kittycats.cc</span>
               <span>Est. 2026</span>
             </div>
@@ -61,7 +61,7 @@ function KineticLoader() {
               </div>
             </div>
             <div className="flex items-end gap-5">
-              <span className="font-mono text-4xl tabular-nums tracking-[-0.08em] text-[#ffd166] sm:text-5xl">
+              <span className="font-display text-4xl font-bold tabular-nums tracking-[-0.08em] text-[#ffd166] sm:text-5xl">
                 {String(progress).padStart(3, '0')}
               </span>
               <div className="mb-2 h-px flex-1 overflow-hidden bg-white/15">
@@ -71,7 +71,7 @@ function KineticLoader() {
                   transition={{ duration: 0.12, ease: 'easeOut' }}
                 />
               </div>
-              <span className="mb-1 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-white/50">Loading</span>
+              <span className="mb-1 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/70">Loading</span>
             </div>
           </motion.div>
         </motion.section>

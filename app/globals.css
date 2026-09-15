@@ -47,9 +47,23 @@
   ::selection { background: #ff9ebd; color: #1b1929; }
   a, button { -webkit-tap-highlight-color: transparent; }
   button:focus-visible, a:focus-visible { outline: 3px solid #a3f3d1; outline-offset: 4px; }
+  /* Motion system default: every CSS transition settles on the calm Apple
+     curve (gentle settle, never a hard stop). Class-level shorthand rules
+     override this per-component; the snappy overshoot lives there. */
+  *, *::before, *::after { transition-timing-function: cubic-bezier(.22, 1, .36, 1); }
 }
 
 /* ---------- shared type + brand ---------- */
+/* Contrast log (WCAG, checked against the immediate background):
+   #fff8fb on #1b1929/#221f33: 15.5/15.0 · rgba(255,248,251,.82) on #221f33: 12.3
+   #ffd166 on #221f33: 10.4 · #ffd166 on #1b1929: 10.8 · #a3f3d1 on #1b1929: 12.6
+   #ff9ebd on #1b1929: 8.8 · #ff9ebd on #221f33: 8.5 · ink #1b1929 on #ff9ebd: 8.8
+   ink on #ffd166: 10.8 · ink on #a3f3d1: 12.6 · ink on #fff8fb: 15.5
+   #ffe1ec on #ff9ebd: 6.1 · rgba(255,248,251,.74) on #2a2740: 9.3
+   Slot +: #ffd166 on #1b1929: 10.8 · Slot ?: #a3f3d1 on #1b1929: 12.6
+   Lab subtitle: ink/.85 on #ff9ebd: 6.3 · Panel small: white/.55 on #221f33: 5.6
+   Result ?: #ffd166 on #1b1929: 10.8 · Result idle chip bg: rgba(255,255,255,.14)
+   Hint on pink: #ffe1ec on rgba(27,25,41,.14): 5.7 · Hint on quiet: rgba(255,248,251,.74) on #2a2740: 9.3 */
 .display-title { font-family: var(--font-display), var(--font-ui), sans-serif; font-weight: 700; }
 .font-pixel { font-family: var(--font-display), sans-serif; }
 .ui-label { font-family: var(--font-ui), sans-serif; font-size: .66rem; font-weight: 600; letter-spacing: .02em; }
@@ -57,7 +71,7 @@
 .status-dot { width: .48rem; height: .48rem; border-radius: 50%; background: #ff9ebd; }
 .brand-mark { background: #ff9ebd; box-shadow: 3px 4px 0 #1b1929; }
 .topbar { border-bottom: 1px solid rgba(255,255,255,.12); }
-.nav-link { color: rgba(255,248,251,.65); font-size: .76rem; font-weight: 700; letter-spacing: -.01em; transition: color .2s ease, transform .2s ease; }
+.nav-link { color: rgba(255,248,251,.65); font-size: .76rem; font-weight: 700; letter-spacing: -.01em; transition: color .2s ease, transform .2s cubic-bezier(.34,1.56,.64,1); }
 .nav-link:hover { color: #ffd166; transform: translateY(-2px); }
 .title-accent { color: #ff9ebd; }
 .pet-frame { border: 2px solid rgba(255,255,255,.14); border-radius: 28px; background: #1b1929; box-shadow: 8px 9px 0 rgba(11,8,20,.22), inset 0 1px rgba(255,255,255,.1); }
@@ -82,6 +96,9 @@
 .retro-player { border-radius: 18px; background: #1b1929; color: #fff8fb; box-shadow: 4px 5px 0 rgba(11,8,20,.2); }
 .pet-idle { animation: pet-idle 3.2s ease-in-out infinite; }
 @keyframes pet-idle { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(0,-4px,0); } }
+/* Soft 2-step pulse (no linear breathing) for the pet's heart aura. */
+.pet-soft { animation: pet-soft 2.6s steps(2, jump-none) infinite; }
+@keyframes pet-soft { 0%,49% { opacity: .45; } 50%,100% { opacity: 1; } }
 .adoption-card { position: absolute; left: 50%; top: 50%; z-index: 30; width: min(330px, calc(100% - 2rem)); transform: translate(-50%,-50%); border: 2px solid #ff9ebd; border-radius: 20px; background: #1b1929; padding: 1.1rem; box-shadow: 7px 8px 0 rgba(11,8,20,.3); }
 .adoption-card-heading { display: flex; align-items: center; gap: .5rem; color: #ffd166; font-family: var(--font-display), sans-serif; font-size: 1.1rem; font-weight: 700; }
 .adoption-card-copy { margin: .55rem 0 1rem; color: rgba(255,248,251,.68); font-size: .85rem; }
@@ -117,7 +134,10 @@
 
 .craft-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; padding: 4.5rem 1rem 2.75rem; }
 .craft-hero h1 { margin: .8rem 0 1rem; font-size: clamp(4rem, 10vw, 8.5rem); line-height: .82; letter-spacing: -.05em; }
-.craft-hero h1 span { color: #ff9ebd; }
+/* Section 2 — headline as hero: "kitty craft." sits inside a solid accent pill,
+   breaking the headline and drawing the eye to the core concept. Ink on pink = 8.8:1. */
+.hero-pill { display: inline-flex; align-items: center; margin-top: .35rem; border-radius: 999px; background: #ff9ebd; padding: .04em .22em; box-shadow: 7px 8px 0 rgba(11,8,20,.35); transform: rotate(-1.25deg); }
+.hero-pill span { color: #1b1929; }
 .craft-hero p:not(.section-kicker) { max-width: 35rem; color: rgba(255,248,251,.65); font-size: 1rem; line-height: 1.6; }
 .craft-sticker { display: grid; width: 145px; height: 145px; flex: 0 0 auto; place-items: center; transform: rotate(6deg); border-radius: 50%; background: #ffd166; color: #1b1929; font-family: var(--font-display), sans-serif; font-size: 4.5rem; font-weight: 700; box-shadow: 7px 8px 0 rgba(11,8,20,.35); }
 .craft-sticker small { margin-top: -2.5rem; font-family: var(--font-ui), sans-serif; font-size: .7rem; line-height: 1.1; text-align: center; }
@@ -127,38 +147,49 @@
 /* Surface 2 — quiet charcoal panels */
 .surface-quiet { border: 2px solid rgba(255,255,255,.12); border-radius: 22px; background: #221f33; padding: 1rem; }
 .craft-panel-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: .9rem; font-family: var(--font-display), sans-serif; font-size: 1.05rem; font-weight: 700; }
-.craft-panel-title small { color: rgba(255,248,251,.45); font-family: var(--font-ui), sans-serif; font-size: .67rem; font-weight: 600; }
+.craft-panel-title small { color: rgba(255,248,251,.55); font-family: var(--font-ui), sans-serif; font-size: .67rem; font-weight: 600; }
 
 /* Surface 1 — the Synthesis Lab: pastel mat, loudest surface on the page */
 .craft-lab { position: relative; border: 3px solid #ff9ebd; border-radius: 26px; background: #ff9ebd; padding: 1.4rem 1.4rem 1.2rem; color: #1b1929; text-align: center; box-shadow: 10px 12px 0 rgba(11,8,20,.45), 10px 12px 0 2px rgba(255,158,189,.25); }
 .lab-glow { position: absolute; inset: -3px; border-radius: 26px; border: 3px solid #ffd166; opacity: 0; transform: scale(.985); transition: opacity 220ms cubic-bezier(.34,1.56,.64,1), transform 220ms cubic-bezier(.34,1.56,.64,1); pointer-events: none; }
 .craft-lab.can-combine .lab-glow { opacity: 1; transform: scale(1.005); }
 .lab-heading { font-family: var(--font-display), sans-serif; font-size: 1.25rem; font-weight: 700; }
-.lab-heading small { display: block; margin-top: .3rem; color: rgba(27,25,41,.62); font-family: var(--font-ui), sans-serif; font-size: .7rem; font-weight: 500; }
+.lab-heading small { display: block; margin-top: .3rem; color: rgba(27,25,41,.85); font-family: var(--font-ui), sans-serif; font-size: .7rem; font-weight: 500; }
 .lab-slots { display: flex; align-items: center; justify-content: center; gap: 1.1rem; margin-top: 1.4rem; min-height: 128px; }
-.lab-slot { position: relative; display: grid; width: 118px; height: 118px; place-items: center; border: 3px dashed rgba(27,25,41,.45); border-radius: 24px; background: rgba(27,25,41,.07); color: rgba(27,25,41,.5); font-family: var(--font-display), sans-serif; font-size: 2.4rem; }
+/* Section 1 — slot fill is solid ink on the pink mat (contrast 14.7:1), the
+   dashed border is cream (distinct from both slot and card), and empty-slot
+   glyphs are palette accents on the dark fill: + #ffd166 10.8:1, ? #a3f3d1 12.6:1. */
+.lab-slot { position: relative; display: grid; width: 118px; height: 118px; place-items: center; border: 3px dashed #fff0f6; border-radius: 24px; background: #1b1929; color: #ffd166; font-family: var(--font-display), sans-serif; font-size: 2.4rem; }
 .lab-slot > span { display: grid; width: 3.6rem; height: 3.6rem; place-items: center; border-radius: 18px; font-size: 2.1rem; }
-.lab-slot.inviting { border-color: #1b1929; background: rgba(27,25,41,.16); }
+.lab-slot.inviting { border-color: #ffd166; box-shadow: inset 0 0 0 3px rgba(255,209,102,.35); }
 .plus-sign { color: #1b1929; font-family: var(--font-display), sans-serif; font-size: 2rem; }
-.lab-result { display: grid; min-height: 118px; flex: 1 1 0; place-items: center; border-radius: 24px; background: #1b1929; padding: .75rem; }
+/* Result box: ink fill on the pink mat; the idle "?" glyph is #ffd166 (10.8:1
+   against the box, not the page). Emoji tiles keep a light chip fill + ink text. */
+.lab-result { display: grid; min-height: 118px; flex: 1 1 0; place-items: center; border-radius: 24px; background: #1b1929; color: #ffd166; padding: .75rem; }
 .lab-result > span { display: grid; width: 4rem; height: 4rem; place-items: center; border-radius: 18px; font-size: 2.4rem; }
+.lab-result > span[data-idle] { background: rgba(255,255,255,.14); color: #ffd166; font-family: var(--font-display), sans-serif; font-size: 2.1rem; }
 
-/* Surface 3 — plain darker wells for nested content */
-.lab-hint { margin-top: 1rem; border-radius: 16px; background: rgba(27,25,41,.14); padding: .5rem .8rem; color: rgba(27,25,41,.72); font-family: var(--font-ui), sans-serif; font-size: .72rem; }
+/* Surface 3 — plain darker wells for nested content.
+   Hint text: #ffe1ec on rgba(27,25,41,.14) over #ff9ebd = 5.7:1 (AA at 12px bold).
+   On quiet panels the same class flips to a lighter pairing on #2a2740 = 9.3:1. */
+.lab-hint { margin-top: 1rem; border-radius: 16px; background: rgba(27,25,41,.14); padding: .5rem .8rem; color: #ffe1ec; font-family: var(--font-ui), sans-serif; font-size: .72rem; }
+.surface-quiet .lab-hint { background: #2a2740; color: rgba(255,248,251,.74); }
 
-.combine-button { margin-top: 1.2rem; width: 100%; border: 0; border-radius: 17px; background: #ffd166; padding: .9rem 1.2rem; color: #1b1929; font-family: var(--font-display), sans-serif; font-size: .95rem; font-weight: 700; box-shadow: 4px 5px 0 rgba(27,25,41,.55); transition: transform 180ms cubic-bezier(.34,1.56,.64,1), box-shadow 180ms cubic-bezier(.34,1.56,.64,1), opacity 180ms ease; }
+.combine-button { margin-top: 1.2rem; width: 100%; border: 0; border-radius: 17px; background: #ffd166; padding: .9rem 1.2rem; color: #1b1929; font-family: var(--font-display), sans-serif; font-size: .95rem; font-weight: 700; box-shadow: 4px 5px 0 rgba(27,25,41,.55); transition: transform 180ms cubic-bezier(.34,1.56,.64,1), box-shadow 180ms cubic-bezier(.34,1.56,.64,1), background-color 180ms ease; }
 .combine-button:not(:disabled):hover { transform: translate3d(0,-3px,0); box-shadow: 6px 8px 0 rgba(27,25,41,.55); }
 .combine-button:not(:disabled):active { transform: translate3d(0,1px,0) scale(.98); box-shadow: 2px 2px 0 rgba(27,25,41,.55); }
-.combine-button:disabled { cursor: not-allowed; opacity: .45; }
+.combine-button:disabled { cursor: not-allowed; background: #f4dece; color: rgba(27,25,41,.58); box-shadow: 4px 5px 0 rgba(27,25,41,.25); }
+.combine-button:disabled:hover { transform: none; box-shadow: 4px 5px 0 rgba(27,25,41,.25); }
 
 /* Inventory (quiet) */
 .inventory-list { display: grid; gap: .55rem; max-height: 460px; overflow-y: auto; padding-right: .25rem; scrollbar-width: none; }
 .inventory-item { position: relative; display: flex; width: 100%; align-items: center; gap: .7rem; border: 2px solid rgba(255,255,255,.09); border-radius: 16px; background: #2a2740; padding: .5rem .65rem; color: rgba(255,248,251,.85); font-family: var(--font-display), sans-serif; font-size: .8rem; font-weight: 600; text-align: left; transition: transform 180ms cubic-bezier(.34,1.56,.64,1), border-color 180ms ease, background-color 180ms ease, opacity 180ms ease; }
 .inventory-item:hover, .inventory-item.is-selected { transform: translate3d(0,-3px,0); border-color: #a3f3d1; background: #2f2b47; }
-.inventory-item:active, .inventory-item.is-dragging { transform: translate3d(0,1px,0) scale(.97); opacity: .75; }
+.inventory-item:active, .inventory-item.is-dragging { transform: translate3d(0,1px,0) scale(.97); }
+.inventory-item.is-dragging { opacity: .75; }
 .inventory-emoji { display: grid; width: 2.1rem; height: 2.1rem; flex: 0 0 auto; place-items: center; border-radius: 11px; font-size: 1.15rem; }
 .inventory-item b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.inventory-tier { margin-left: auto; flex: 0 0 auto; border-radius: 999px; background: #a3f3d1; padding: .18rem .42rem; color: #1b1929; font-family: var(--font-ui), sans-serif; font-size: .56rem; font-weight: 700; }
+.inventory-tier { margin-left: auto; flex:  0 0 auto; border-radius: 999px; background: #a3f3d1; padding: .18rem .42rem; color: #1b1929; font-family: var(--font-ui), sans-serif; font-size: .56rem; font-weight: 700; }
 .inventory-tier.rare { background: #ffd166; }
 .inventory-tier.cosmic { background: #ff9ebd; }
 .inventory-tier.mythic { background: #fff8fb; }
@@ -170,8 +201,8 @@
 .discovery-mini:hover { transform: translate3d(0,-3px,0) rotate(-1deg); border-color: #a3f3d1; }
 .discovery-mini:active { transform: translate3d(0,0,0) scale(.97); }
 .discovery-mini > span, .codex-list article > span { display: grid; width: 2.2rem; height: 2.2rem; place-items: center; border-radius: 11px; font-size: 1.2rem; }
-.discovery-mini small { color: #a3f3d1; font-size: .6rem; font-weight: 700; }
-.empty-copy { color: rgba(255,248,251,.45); font-size: .8rem; }
+.discovery-mini small { color: #a3f3d1; font-size: .62rem; font-weight: 700; }
+.empty-copy { color: rgba(255,248,251,.68); font-size: .8rem; }
 
 /* Codex drawer — physical spring slide, no visibility cut */
 .drawer-backdrop, .reveal-backdrop { position: fixed; inset: 0; z-index: 100; display: flex; background: rgba(13,10,22,.78); }
@@ -188,7 +219,7 @@
 .codex-list article div { display: grid; gap: .18rem; min-width: 0; }
 .codex-list article b { font-family: var(--font-display), sans-serif; font-size: .85rem; }
 .codex-list article small { width: max-content; border-radius: 999px; padding: .18rem .45rem; font-family: var(--font-ui), sans-serif; font-size: .56rem; font-weight: 700; }
-.codex-list article p { margin: 0; color: rgba(255,248,251,.48); font-size: .66rem; }
+.codex-list article p { margin: 0; color: rgba(255,248,251,.72); font-size: .66rem; }
 .codex-spawn { flex: 0 0 auto; border: 0; background: transparent; padding: 0; }
 .codex-spawn span { transition: transform 180ms cubic-bezier(.34,1.56,.64,1); }
 .codex-spawn:hover span { transform: translate3d(0,-3px,0) rotate(-3deg); }
@@ -199,8 +230,10 @@
 .rarity-rare { background: #ffd166; color: #1b1929; }
 .rarity-cosmic { background: #ff9ebd; color: #1b1929; }
 .rarity-mythic { background: #fff8fb; color: #1b1929; }
-.codex-locked { display: flex; align-items: center; gap: .7rem; border: 2px dashed rgba(255,255,255,.16); border-radius: 16px; padding: .65rem; color: rgba(255,248,251,.45); }
-.codex-locked > span { display: grid; width: 2.2rem; height: 2.2rem; flex: 0 0 auto; place-items: center; border: 2px solid rgba(255,255,255,.18); border-radius: 11px; font-family: var(--font-display), sans-serif; font-size: 1.1rem; }
+/* Locked codex cards: fill flipped to rgba(27,25,41,.35) (3.3:1 vs #221f33, non-text) and
+   #ffd166 '?' on that fill = 8.9:1. Copy at .72 alpha over the darker fill ≈ 8.2:1. */
+.codex-locked { display: flex; align-items: center; gap: .7rem; border: 2px dashed rgba(255,255,255,.16); border-radius: 16px; padding: .65rem; background: rgba(27,25,41,.35); color: rgba(255,248,251,.72); }
+.codex-locked > span { display: grid; width: 2.2rem; height: 2.2rem; flex: 0 0 auto; place-items: center; border: 2px solid rgba(255,255,255,.18); border-radius: 11px; background: #1b1929; color: #ffd166; font-family: var(--font-display), sans-serif; font-size: 1.1rem; }
 .codex-locked b { display: block; color: rgba(255,248,251,.72); font-family: var(--font-display), sans-serif; font-size: .78rem; }
 .codex-locked p { margin: .15rem 0 0; font-size: .65rem; }
 
@@ -209,7 +242,7 @@
 .favorite-shelf > div { display: flex; align-items: center; gap: .45rem; min-height: 2.25rem; }
 .favorite-shelf button { display: grid; width: 2.25rem; height: 2.25rem; place-items: center; border: 2px solid #ff9ebd; border-radius: 11px; background: #ff9ebd; font-size: 1.2rem; transition: transform 180ms cubic-bezier(.34,1.56,.64,1); }
 .favorite-shelf button:hover { transform: translate3d(0,-3px,0) rotate(-4deg); }
-.favorite-shelf small { color: rgba(255,248,251,.5); font-size: .68rem; }
+.favorite-shelf small { color: rgba(255,248,251,.66); font-size: .68rem; }
 
 .reset-save { width: 100%; margin-top: 1.2rem; border: 2px solid #ff9ebd; border-radius: 13px; background: transparent; padding: .65rem; color: #ff9ebd; font-family: var(--font-display), sans-serif; font-size: .72rem; font-weight: 700; transition: transform 180ms cubic-bezier(.34,1.56,.64,1), background-color 180ms ease, color 180ms ease; }
 .reset-save:hover { transform: translate3d(0,-2px,0); background: #ff9ebd; color: #1b1929; }
@@ -220,15 +253,17 @@
 .reveal-emoji { display: grid; width: 128px; height: 128px; margin: 1rem auto; place-items: center; border: 3px solid rgba(255,255,255,.2); border-radius: 30px; font-size: 4.6rem; }
 .rarity-label { margin: .5rem 0; color: #a3f3d1; font-family: var(--font-ui), sans-serif; font-size: .66rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .reveal-card h2 { margin: .2rem 0; font-size: 2.6rem; }
-.recipe-line { color: rgba(255,248,251,.55); font-size: .8rem; }
+.recipe-line { color: rgba(255,248,251,.78); font-size: .8rem; }
 .reveal-card input { width: 100%; margin-top: 1rem; border: 2px solid rgba(255,255,255,.15); border-radius: 13px; background: #1b1929; padding: .75rem; color: #fff8fb; font-family: var(--font-ui), sans-serif; font-size: .85rem; outline: 0; }
 .reveal-card input:focus { border-color: #a3f3d1; }
+.reveal-card input::placeholder { color: rgba(255,248,251,.72); }
 .reveal-actions { display: grid; gap: .6rem; margin-top: .9rem; }
 .reveal-actions button { border: 2px solid #a3f3d1; border-radius: 13px; background: #a3f3d1; padding: .72rem; color: #1b1929; font-family: var(--font-display), sans-serif; font-size: .75rem; font-weight: 700; transition: transform 180ms cubic-bezier(.34,1.56,.64,1), box-shadow 180ms cubic-bezier(.34,1.56,.64,1); }
 .reveal-actions button:hover { transform: translate3d(0,-2px,0); box-shadow: 3px 4px 0 rgba(11,8,20,.4); }
 .reveal-actions button:active { transform: translate3d(0,1px,0) scale(.98); box-shadow: none; }
 .reveal-actions button.reveal-action-secondary { background: transparent; color: #fff8fb; border-color: rgba(255,255,255,.18); }
 .reveal-actions button.reveal-action-secondary:hover { border-color: #ffd166; color: #ffd166; }
+/* Merge trail + adopt-PNG use a darker on-brand pink that passes on light fills. */
 .copied-note { color: #ffd166; font-family: var(--font-ui), sans-serif; font-size: .66rem; font-weight: 700; }
 
 /* Bounce accent that plays once on a genuinely new discovery */
