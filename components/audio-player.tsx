@@ -1,198 +1,186 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useAudioVisualizer } from '@/hooks/useAudioVisualizer'
+import { usePlayer } from '@/hooks/usePlayer'
+import { playClick, playPop, resumeAudio } from './sfx'
+import { isMuted } from './sound-toggle'
 
-// A royalty-free lo-fi ambient pad generated with the Web Audio API,
-// used as a silent fallback when /music/bg-pixel.mp3 is unavailable.
-function startSynthPad(ctx: AudioContext) {
-  const master = ctx.createGain()
-  master.gain.value = 0
-  master.connect(ctx.destination)
-
-  const filter = ctx.createBiquadFilter()
-  filter.type = 'lowpass'
-  filter.frequency.value = 700
-  filter.connect(master)
-
-  const notes = [196, 261.63, 329.63] // G3, C4, E4 — a soft C major pad
-  const oscs = notes.map((freq, i) => {
-    const osc = ctx.createOscillator()
-    osc.type = i === 0 ? 'sine' : 'triangle'
-    osc.frequency.value = freq
-    const g = ctx.createGain()
-    g.gain.value = 0.18
-    osc.connect(g)
-    g.connect(filter)
-    osc.start()
-    return osc
-  })
-
-  // gentle tremolo
-  const lfo = ctx.createOscillator()
-  lfo.frequency.value = 0.12
-  const lfoGain = ctx.createGain()
-  lfoGain.gain.value = 0.05
-  lfo.connect(lfoGain)
-  lfoGain.connect(master.gain)
-  lfo.start()
-
-  return {
-    master,
-    stop: () => {
-      oscs.forEach((o) => {
-        try {
-          o.stop()
-        } catch {
-          /* noop */
-        }
-      })
-      try {
-        lfo.stop()
-      } catch {
-        /* noop */
-      }
-    },
-  }
+function blip(sound: () => void) {
+  if (isMuted()) return
+  resumeAudio()
+  sound()
 }
 
 export function AudioPlayer() {
-  const [playing, setPlaying] = useState(false)
-  const [ready, setReady] = useState(false)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const synthRef = useRef<{ master: GainNode; stop: () => void } | null>(null)
-  const ctxRef = useRef<AudioContext | null>(null)
-  const useSynthRef = useRef(false)
+  const player = usePlayer()
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const boxRef = useRef<HTMLDivElement | null>(null)
+  const textRef = useRef<HTMLSpanElement | null>(null)
+  const [overflows, setOverflows] = useState(false)
 
+  useAudioVisualizer(canvasRef, player.playing)
+
+  // The marquee only earns its animation when the title actually overflows —
+  // sliding a title that already fits reads as a bug.
+  const title = player.track.title
   useEffect(() => {
-    const audio = new Audio('/music/bg-pixel.mp3')
-    audio.loop = true
-    audio.volume = 0.5
-    audio.preload = 'auto'
-    audioRef.current = audio
-
-    audio
-      .addEventListener('canplaythrough', () => setReady(true), { once: true })
-
-    audio.addEventListener('error', () => {
-      // file unavailable — fall back to the synthesized pad
-      useSynthRef.current = true
-      setReady(true)
-    })
-
-    // If after a short window the file hasn't loaded, assume it's missing.
-    const t = setTimeout(() => {
-      if (!ready && !useSynthRef.current) {
-        useSynthRef.current = true
-        setReady(true)
-      }
-    }, 1500)
-
-    return () => {
-      clearTimeout(t)
-      audio.pause()
-      audio.src = ''
-      synthRef.current?.stop()
-      ctxRef.current?.close().catch(() => {})
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const toggle = async () => {
-    if (useSynthRef.current) {
-      if (!ctxRef.current) {
-        try {
-          ctxRef.current = new (window.AudioContext ||
-            (window as unknown as { webkitAudioContext: typeof AudioContext })
-              .webkitAudioContext)()
-          synthRef.current = startSynthPad(ctxRef.current)
-        } catch {
-          return
-        }
-      }
-      const ctx = ctxRef.current
-      if (!ctx || !synthRef.current) return
-      if (playing) {
-        synthRef.current.master.gain.cancelScheduledValues(ctx.currentTime)
-        synthRef.current.master.gain.linearRampToValueAtTime(
-          0,
-          ctx.currentTime + 0.4,
-        )
-        setPlaying(false)
-      } else {
-        if (ctx.state === 'suspended') {
-          try {
-            await ctx.resume()
-          } catch {
-            /* noop */
-          }
-        }
-        synthRef.current.master.gain.cancelScheduledValues(ctx.currentTime)
-        synthRef.current.master.gain.linearRampToValueAtTime(
-          0.5,
-          ctx.currentTime + 0.4,
-        )
-        setPlaying(true)
-      }
-      return
-    }
-
-    const audio = audioRef.current
-    if (!audio) return
-    if (playing) {
-      audio.pause()
-      setPlaying(false)
-    } else {
-      try {
-        await audio.play()
-        setPlaying(true)
-      } catch {
-        // autoplay blocked or play failed — switch to synth fallback
-        useSynthRef.current = true
-        try {
-          ctxRef.current = new (window.AudioContext ||
-            (window as unknown as { webkitAudioContext: typeof AudioContext })
-              .webkitAudioContext)()
-          synthRef.current = startSynthPad(ctxRef.current)
-          if (ctxRef.current.state === 'suspended') {
-            await ctxRef.current.resume()
-          }
-          synthRef.current.master.gain.linearRampToValueAtTime(
-            0.5,
-            ctxRef.current.currentTime + 0.4,
-          )
-          setPlaying(true)
-        } catch {
-          /* noop */
-        }
-      }
-    }
-  }
+    const box = boxRef.current
+    const text = textRef.current
+    if (!box || !text) return
+    const check = () => setOverflows(text.scrollWidth > box.clientWidth)
+    check()
+    const observer = new ResizeObserver(check)
+    observer.observe(box)
+    return () => observer.disconnect()
+  }, [title])
 
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      disabled={!ready}
-      aria-label={playing ? 'Pause music' : 'Play music'}
-      className="fixed bottom-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-2xl border-4 bg-card text-foreground shadow-[4px_4px_0_0_var(--ink)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 disabled:opacity-40"
-      style={{ borderColor: 'var(--ink)' }}
-    >
-      {playing ? (
-        <span className="flex items-end gap-[3px]">
-          <span className="h-3 w-[3px] animate-[eq_0.7s_ease-in-out_infinite] rounded-full bg-foreground" />
-          <span className="h-4 w-[3px] animate-[eq_0.7s_ease-in-out_infinite_0.2s] rounded-full bg-foreground" />
-          <span className="h-2.5 w-[3px] animate-[eq_0.7s_ease-in-out_infinite_0.4s] rounded-full bg-foreground" />
-        </span>
-      ) : (
-        <svg
-          viewBox="0 0 24 24"
-          className="h-5 w-5"
-          fill="currentColor"
-          aria-hidden="true"
+    <div className="w-full max-w-2xl">
+      <div
+        className="relative overflow-hidden rounded-3xl border-4 p-6 sm:p-7"
+        style={{
+          background: 'var(--surface)',
+          borderColor: 'var(--edge)',
+          boxShadow: '6px 6px 0 0 var(--shadow)',
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <span
+            className="shrink-0 rounded-full border-2 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em]"
+            style={{ borderColor: 'var(--edge)', color: 'var(--muted-foreground)' }}
+          >
+            {player.playing ? 'Now playing' : 'Paused'}
+          </span>
+
+          <div ref={boxRef} className="relative min-w-0 flex-1 overflow-hidden" aria-live="polite">
+            {/* Layout probe: measured, never shown. */}
+            <span
+              ref={textRef}
+              aria-hidden="true"
+              className="invisible absolute whitespace-nowrap font-pixel text-sm"
+            >
+              {title}
+            </span>
+
+            {overflows ? (
+              <div className="flex w-max animate-[marquee_12s_linear_infinite]">
+                <span className="pr-10 font-pixel text-sm text-foreground">{title}</span>
+                <span aria-hidden="true" className="pr-10 font-pixel text-sm text-foreground">
+                  {title}
+                </span>
+              </div>
+            ) : (
+              <span className="block truncate font-pixel text-sm text-foreground">{title}</span>
+            )}
+          </div>
+
+          <span className="hidden shrink-0 text-[11px] font-semibold text-muted-foreground sm:block">
+            {player.track.artist}
+          </span>
+        </div>
+
+        <div
+          className="relative mt-5 h-28 overflow-hidden rounded-2xl border-2 sm:h-32"
+          style={{ borderColor: 'var(--edge)', background: 'var(--ground)' }}
         >
-          <path d="M8 5v14l11-7L8 5z" />
-        </svg>
-      )}
-    </button>
+          <canvas ref={canvasRef} className="block h-full w-full" aria-hidden="true" />
+        </div>
+
+        <input
+          type="range"
+          min={0}
+          max={1000}
+          value={Math.round(player.progress * 1000)}
+          onChange={(e) => player.seek(Number(e.target.value) / 1000)}
+          aria-label="Track position"
+          aria-valuetext={`${Math.round(player.progress * 100)}%`}
+          className="mt-5 block w-full"
+          style={{ accentColor: 'var(--pastel-pink)' }}
+        />
+
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                blip(playClick)
+                player.prev()
+              }}
+              aria-label="Previous track"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border-2 text-foreground transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0"
+              style={{ borderColor: 'var(--edge)', background: 'var(--surface-2)' }}
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
+                <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                blip(playPop)
+                player.toggle()
+              }}
+              aria-label={player.playing ? 'Pause' : 'Play'}
+              className="flex h-14 w-14 items-center justify-center rounded-2xl border-4 transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0"
+              style={{
+                background: 'var(--pastel-pink)',
+                color: 'var(--ink)',
+                borderColor: 'var(--ink)',
+                boxShadow: '4px 4px 0 0 var(--shadow)',
+              }}
+            >
+              {player.playing ? (
+                <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden="true">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden="true">
+                  <path d="M8 5v14l11-7L8 5z" />
+                </svg>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                blip(playClick)
+                player.next()
+              }}
+              aria-label="Next track"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border-2 text-foreground transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0"
+              style={{ borderColor: 'var(--edge)', background: 'var(--surface-2)' }}
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
+                <path d="M6 18l8.5-6L6 6v12zM16 6h2v12h-2V6z" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-4 w-4 text-muted-foreground"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M4 9.7h3.29L12 4.5v15l-4.71-5.2H4a1 1 0 0 1-1-1v-2.6a1 1 0 0 1 1-1Z" />
+              <path d="M16 8.09a1 1 0 1 0-1.41 1.42A5 5 0 0 1 16 12a5 5 0 0 0 1.41 2.91 1 1 0 0 0 1.41-1.42A7 7 0 0 0 16 8.09Z" />
+            </svg>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={Math.round(player.volume * 100)}
+              onChange={(e) => player.setVolume(Number(e.target.value) / 100)}
+              aria-label="Volume"
+              className="block w-28"
+              style={{ accentColor: 'var(--pastel-lavender)' }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

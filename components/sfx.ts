@@ -1,21 +1,20 @@
 'use client'
 
-// Lightweight chiptune SFX engine built on the Web Audio API.
-// All sounds are synthesized — no audio files required.
+// Lightweight chiptune SFX engine. All sounds are synthesized — no audio files.
+//
+// Effects ride the shared engine's sfx bus rather than opening a context of
+// their own: the spectrum analyser taps the music bus only, so a card hover
+// never makes the visualizer jump.
 
-let ctx: AudioContext | null = null
+import { getAudioContext, getSfxBus } from './audio-engine'
 
 function getCtx(): AudioContext | null {
-  if (typeof window === 'undefined') return null
-  if (ctx) return ctx
-  try {
-    ctx = new (window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext })
-        .webkitAudioContext)()
-  } catch {
-    return null
-  }
-  return ctx
+  return getAudioContext()
+}
+
+/** Where effects land — the sfx bus, or straight out if the bus failed. */
+function out(ac: AudioContext): AudioNode {
+  return getSfxBus() ?? ac.destination
 }
 
 function tone(
@@ -35,7 +34,7 @@ function tone(
   gain.gain.linearRampToValueAtTime(vol, ac.currentTime + start + 0.012)
   gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + start + dur)
   osc.connect(gain)
-  gain.connect(ac.destination)
+  gain.connect(out(ac))
   osc.start(ac.currentTime + start)
   osc.stop(ac.currentTime + start + dur + 0.02)
 }
@@ -127,7 +126,7 @@ export function playPurr() {
   gain.gain.linearRampToValueAtTime(0.06, ac.currentTime + 0.05)
   gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.6)
   osc.connect(gain)
-  gain.connect(ac.destination)
+  gain.connect(out(ac))
   osc.start()
   lfo.start()
   osc.stop(ac.currentTime + 0.65)
