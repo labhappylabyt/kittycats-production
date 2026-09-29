@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Fredoka, Silkscreen } from 'next/font/google'
+import { site } from '@/config/site'
 import './globals.css'
 
 const fredoka = Fredoka({
@@ -16,10 +17,9 @@ const silkscreen = Silkscreen({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://kittycats.cc'),
-  title: 'kittycats.cc — Pixel Pet Builder & Lab Deck',
-  description: 'Build your own pixel kitty, adopt it as a PNG, and explore my links across the web — GitHub, Discord, Roblox, NameMC, and more.',
-  generator: 'Bolt',
+  metadataBase: new URL(site.url),
+  title: site.title,
+  description: site.description,
   icons: {
     icon: [
       {
@@ -38,31 +38,24 @@ export const metadata: Metadata = {
     apple: '/apple-icon.png',
   },
   openGraph: {
-    title: 'kittycats.cc — Pixel Pet Builder & Lab Deck',
-    description: 'Build your own pixel kitty, adopt it as a PNG, and explore my links across the web.',
-    url: 'https://kittycats.cc',
-    siteName: 'kittycats.cc',
+    title: site.title,
+    description: site.description,
+    url: site.url,
+    siteName: site.domain,
     type: 'website',
-    images: [
-      {
-        url: '/placeholder.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'kittycats.cc Pixel Pet Builder',
-      },
-    ],
+    images: [{ url: '/placeholder.jpg', width: 1200, height: 630, alt: site.title }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'kittycats.cc — Pixel Pet Builder & Lab Deck',
-    description: 'Build your own pixel kitty, adopt it as a PNG, and explore my links across the web.',
+    title: site.title,
+    description: site.description,
     images: ['/placeholder.jpg'],
   },
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light',
-  themeColor: '#fdfbf7',
+  colorScheme: 'dark',
+  themeColor: '#16132b',
 }
 
 export default function RootLayout({
@@ -71,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`light bg-background ${fredoka.variable} ${silkscreen.variable}`}>
+    <html lang="en" className={`dark bg-background ${fredoka.variable} ${silkscreen.variable}`}>
       <body className="relative antialiased font-sans">
         {children}
         <footer className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center pb-3">
