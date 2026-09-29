@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import gsap from 'gsap'
+import { useCardTilt } from '@/hooks/useCardTilt'
 import type { Social } from './socials'
 import { playPop, playTick, resumeAudio } from './sfx'
 import { isMuted } from './sound-toggle'
@@ -10,51 +11,7 @@ const CARD_W = 256
 const CARD_H = 360
 
 export function Card({ social, index }: { social: Social; index: number }) {
-  const cardRef = useRef<HTMLAnchorElement | null>(null)
-  const innerRef = useRef<HTMLSpanElement | null>(null)
   const drawerRef = useRef<HTMLDivElement | null>(null)
-
-  const onMove = (e: React.MouseEvent) => {
-    const el = cardRef.current
-    const inner = innerRef.current
-    if (!el || !inner) return
-    const rect = el.getBoundingClientRect()
-    const cx = rect.left + rect.width / 2
-    const cy = rect.top + rect.height / 2
-    const dx = (e.clientX - cx) / (rect.width / 2)
-    const dy = (e.clientY - cy) / (rect.height / 2)
-    const rotY = dx * 12
-    const rotX = -dy * 12
-    gsap.to(inner, {
-      rotateX: rotX,
-      rotateY: rotY,
-      z: 8,
-      duration: 0.15,
-      ease: 'power2.out',
-      transformPerspective: 1000,
-    })
-  }
-
-  const onLeave = () => {
-    const inner = innerRef.current
-    if (inner) {
-      gsap.to(inner, {
-        rotateX: 0,
-        rotateY: 0,
-        z: 0,
-        duration: 0.4,
-        ease: 'power3.out',
-      })
-    }
-    if (drawerRef.current) {
-      gsap.to(drawerRef.current, {
-        opacity: 0,
-        y: 8,
-        duration: 0.2,
-        ease: 'power2.out',
-      })
-    }
-  }
 
   const onEnter = () => {
     if (!isMuted()) {
@@ -71,12 +28,28 @@ export function Card({ social, index }: { social: Social; index: number }) {
     }
   }
 
+  const onLeave = () => {
+    if (drawerRef.current) {
+      gsap.to(drawerRef.current, {
+        opacity: 0,
+        y: 8,
+        duration: 0.2,
+        ease: 'power2.out',
+      })
+    }
+  }
+
   const onClick = () => {
     if (!isMuted()) {
       resumeAudio()
       playPop()
     }
   }
+
+  const { cardRef, faceRef, tilt } = useCardTilt<HTMLAnchorElement>({
+    onEnter,
+    onLeave,
+  })
 
   const { Icon } = social
 
@@ -93,19 +66,17 @@ export function Card({ social, index }: { social: Social; index: number }) {
         draggable={false}
         aria-label={`${social.name} — ${social.handle}`}
         className="group block h-full w-full [perspective:1000px]"
-        onMouseMove={onMove}
-        onMouseEnter={onEnter}
-        onMouseLeave={onLeave}
+        {...tilt}
         onClick={onClick}
       >
         <span
-          ref={innerRef}
+          ref={faceRef}
           className="card-float relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border-4 p-6 transition-transform duration-200 ease-out group-hover:-translate-y-2"
           style={{
             background: social.color,
             color: social.ink,
             borderColor: social.ink,
-            boxShadow: '6px 6px 0 0 var(--ink)',
+            boxShadow: '6px 6px 0 0 var(--shadow)',
             animationDelay: `${(index % 6) * 0.4}s`,
             transformStyle: 'preserve-3d',
             ['--card-glow' as string]: `${social.color}cc`,
@@ -157,11 +128,12 @@ export function Card({ social, index }: { social: Social; index: number }) {
           {social.meta && (
             <div
               ref={drawerRef}
-              className="pointer-events-none absolute inset-x-3 bottom-3 rounded-xl border-2 bg-white/80 p-2.5 text-left opacity-0"
+              className="pointer-events-none absolute inset-x-3 bottom-3 rounded-xl border-2 p-2.5 text-left opacity-0"
               style={{
-                borderColor: social.ink,
+                background: social.ink,
+                color: social.color,
+                borderColor: social.color,
                 transform: 'translateY(8px)',
-                backdropFilter: 'blur(4px)',
               }}
             >
               <span className="block text-[11px] font-bold uppercase tracking-wider opacity-60">

@@ -1,49 +1,23 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCopy } from '@/hooks/useCopy'
 import { playClick } from './sfx'
 
 export function ContactChip({ email }: { email: string }) {
-  const [copied, setCopied] = useState(false)
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const { copied, copy } = useCopy()
 
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-  }, [])
-
-  const copy = async () => {
+  const onCopy = () => {
     playClick()
-    try {
-      await navigator.clipboard.writeText(email)
-    } catch {
-      // fallback for older browsers
-      try {
-        const ta = document.createElement('textarea')
-        ta.value = email
-        ta.style.position = 'fixed'
-        ta.style.opacity = '0'
-        document.body.appendChild(ta)
-        ta.select()
-        document.execCommand('copy')
-        document.body.removeChild(ta)
-      } catch {
-        /* noop */
-      }
-    }
-    setCopied(true)
-    if (timerRef.current) clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(() => setCopied(false), 1600)
+    void copy(email)
   }
 
   return (
     <div className="relative">
       <button
         type="button"
-        onClick={copy}
-        className="group inline-flex items-center gap-2 rounded-2xl border-4 bg-card px-4 py-2 text-sm font-bold text-foreground shadow-[4px_4px_0_0_var(--ink)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0"
-        style={{ borderColor: 'var(--ink)' }}
+        onClick={onCopy}
+        className="group inline-flex items-center gap-2 rounded-2xl border-4 bg-card px-4 py-2 text-sm font-bold text-foreground shadow-[4px_4px_0_0_var(--shadow)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0"
+        style={{ borderColor: 'var(--edge)' }}
         aria-label={`Copy email ${email}`}
       >
         <svg
@@ -64,10 +38,10 @@ export function ContactChip({ email }: { email: string }) {
       </button>
       {/* tooltip */}
       <div
-        className={`pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg border-2 bg-card px-2 py-1 text-xs font-bold shadow-[2px_2px_0_0_var(--ink)] transition-all duration-200 ${
+        className={`pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg border-2 bg-card px-2 py-1 text-xs font-bold shadow-[2px_2px_0_0_var(--shadow)] transition-all duration-200 ${
           copied ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
         }`}
-        style={{ borderColor: 'var(--ink)' }}
+        style={{ borderColor: 'var(--edge)' }}
       >
         Copied! 🐾
       </div>

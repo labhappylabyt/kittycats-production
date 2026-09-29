@@ -47,8 +47,8 @@ export function SoundToggle() {
       onClick={toggle}
       aria-pressed={! muted}
       aria-label={muted ? 'Unmute sound effects' : 'Mute sound effects'}
-      className="fixed top-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-2xl border-4 bg-card text-foreground shadow-[4px_4px_0_0_var(--ink)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0"
-      style={{ borderColor: 'var(--ink)' }}
+      className="fixed top-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-2xl border-4 bg-card text-foreground shadow-[4px_4px_0_0_var(--shadow)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0"
+      style={{ borderColor: 'var(--edge)' }}
     >
       {muted ? (
         <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
