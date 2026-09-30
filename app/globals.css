@@ -6,328 +6,45 @@
 
 @theme inline {
   --font-sans: var(--font-fredoka), ui-rounded, system-ui, sans-serif;
-  --font-mono: var(--font-fredoka), ui-rounded, system-ui, sans-serif;
-  --font-pixel: var(--font-pixel), 'Silkscreen', monospace;
-  --color-ink: var(--ink);
-  --color-ground: var(--ground);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-edge: var(--edge);
-  --color-glow: var(--glow);
-  --color-pastel-lavender: var(--pastel-lavender);
-  --color-pastel-periwinkle: var(--pastel-periwinkle);
-  --color-pastel-coral: var(--pastel-coral);
-  --color-pastel-mint: var(--pastel-mint);
-  --color-pastel-pink: var(--pastel-pink);
-  --color-pastel-peach: var(--pastel-peach);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-foreground: var(--foreground);
-  --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+  --font-pixel: var(--font-pixel), monospace;
+  --color-background: var(--background); --color-foreground: var(--foreground);
+  --color-card: var(--card); --color-card-foreground: var(--card-foreground);
+  --color-muted-foreground: var(--muted-foreground); --color-border: var(--border);
+  --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground);
+  --color-input: var(--input); --color-ring: var(--ring);
+  --radius-lg: 1rem; --radius-xl: 1.25rem; --radius-2xl: 1.5rem; --radius-3xl: 2rem;
 }
 
-/* ---- dark ink world ---------------------------------------------------
-   Same spine as before: solid faces, hard 4px outlines, hard offset
-   shadows, zero blur. The ground drops to deep indigo and the ink outline
-   inverts to a pale lavender on dark panels — a #2f2a44 line on a #1f1a3a
-   panel carries no edge. Pastel faces are untouched and still ink-on-pastel,
-   so they now read as stickers lit against the dark.
-   ---------------------------------------------------------------------- */
 :root {
   color-scheme: dark;
-
-  --ground: #16132b;
-  --surface: #1f1a3a;
-  --surface-2: #262047;
-  --edge: #4a3f7a;
-  --glow: #ffc4e1;
-  --ink: #2f2a44;
-  --shadow: #0b0918;
-
-  /* pastel faces — unchanged from the light build */
-  --pastel-lavender: #d7c9ff;
-  --pastel-periwinkle: #c4d4ff;
-  --pastel-coral: #ffd0d0;
-  --pastel-mint: #bdecd0;
-  --pastel-pink: #ffc4e1;
-  --pastel-peach: #ffd7b0;
-
-  --background: var(--ground);
-  --foreground: #f3f0ff;
-  --card: var(--surface);
-  --card-foreground: #f3f0ff;
-  --popover: var(--surface-2);
-  --popover-foreground: #f3f0ff;
-  --primary: #ffc4e1;
-  --primary-foreground: var(--ink);
-  --secondary: var(--surface-2);
-  --secondary-foreground: #f3f0ff;
-  --muted: var(--surface-2);
-  --muted-foreground: #a99ecf;
-  --accent: #c4d4ff;
-  --accent-foreground: var(--ink);
-  --destructive: #ff8a8a;
-  --border: var(--edge);
-  --input: var(--edge);
-  --ring: #8b7bc7;
-  --chart-1: #d7c9ff;
-  --chart-2: #bdecd0;
-  --chart-3: #ffd7b0;
-  --chart-4: #ffc4e1;
-  --chart-5: #c4d4ff;
-  --radius: 1rem;
-  --sidebar: var(--surface);
-  --sidebar-foreground: #f3f0ff;
-  --sidebar-primary: #ffc4e1;
-  --sidebar-primary-foreground: var(--ink);
-  --sidebar-accent: var(--surface-2);
-  --sidebar-accent-foreground: #f3f0ff;
-  --sidebar-border: var(--edge);
-  --sidebar-ring: #8b7bc7;
+  --background: #0b0c10; --foreground: #edf1f4; --card: #12151d; --card-foreground: #edf1f4;
+  --surface: #12151d; --surface-2: #181c26; --edge: rgba(255,255,255,.11); --border: rgba(255,255,255,.11);
+  --muted: #181c26; --muted-foreground: #8c96a8; --primary: #b9a7ff; --primary-foreground: #0b0c10;
+  --accent: #8ff0d0; --accent-foreground: #0b0c10; --input: rgba(255,255,255,.14); --ring: #b9a7ff;
+  --shadow: #050609; --ink: #0b0c10;
+  --pastel-lavender: #b9a7ff; --pastel-periwinkle: #a7c7ff; --pastel-coral: #ff9eaa;
+  --pastel-mint: #8ff0d0; --pastel-pink: #f3a8d2; --pastel-peach: #ffc38c;
 }
-
-/* The world is dark-only. .dark mirrors :root so shadcn's `dark:` variants
-   stay meaningful if any component reaches for one. */
-.dark {
-  color-scheme: dark;
-}
-
+.dark { color-scheme: dark; }
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden;
-  }
-  body {
-    @apply bg-background text-foreground;
-    background-color: var(--ground);
-    background-image: radial-gradient(#2e2752 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
+  * { @apply border-border outline-ring/50; }
+  html, body { margin:0; min-height:100%; overflow-x:hidden; }
+  body { @apply bg-background text-foreground; background-image: radial-gradient(circle at 50% -10%, rgba(185,167,255,.14), transparent 38%), linear-gradient(180deg,#0b0c10 0%,#0d1016 100%); }
 }
-
-/* Hide scrollbar for clean full-viewport layout — scroll still works via Lenis */
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none;
-}
-html {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-/* Typewriter blinking cursor */
-@keyframes blink {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-.animate-blink {
-  animation: blink 1s step-end infinite;
-}
-
-/* Equalizer bars for the audio player */
-@keyframes eq {
-  0%,
-  100% {
-    transform: scaleY(0.4);
-  }
-  50% {
-    transform: scaleY(1);
-  }
-}
-
-@keyframes reel-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-.reel-spin {
-  animation: reel-spin 1.4s linear infinite;
-}
-
-/* Slow turn for the profile avatar's halo ring — same keyframes, a pace that
-   reads as ambient rather than as a loading spinner. */
-.ring-spin {
-  animation: reel-spin 9s linear infinite;
-}
-
-/* Gentle breathing bob for the pixel cat */
-@keyframes cat-breathe {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-3px) scale(1.03);
-  }
-}
-.animate-cat-breathe {
-  animation: cat-breathe 3.5s ease-in-out infinite;
-}
-
-/* Idle bounce for the live pet preview */
-@keyframes pet-bounce {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-6px) scale(1.02);
-  }
-}
-.animate-pet-bounce {
-  animation: pet-bounce 2.4s ease-in-out infinite;
-}
-
-/* Custom paw cursor + sparkle trail */
-.paw-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 24px;
-  height: 24px;
-  pointer-events: none;
-  z-index: 10000;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='%23e8ddff'><circle cx='12' cy='16' r='4.5'/><circle cx='6' cy='10' r='2.4'/><circle cx='18' cy='10' r='2.4'/><circle cx='9' cy='5.5' r='2.1'/><circle cx='15' cy='5.5' r='2.1'/></g></svg>");
-  background-size: contain;
-  background-repeat: no-repeat;
-  will-change: transform;
-}
-
-.paw-sparkle {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%) rotate(var(--rot));
-}
-
-/* Seamless marquee: 2 copies, translate from 0% to -50% (one copy width), then loop */
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* Staggered floating bob for lab deck cards — bobs vertically only,
-   never conflicts with the marquee's horizontal transform. */
-@keyframes card-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-.card-float {
-  animation: card-float 3.5s ease-in-out infinite;
-}
-
-/* Hover glow: soft ambient glow beneath cards, tinted to the card's theme color.
-   Uses box-shadow transition (GPU-friendly) with a CSS var for per-card color. */
-.card-glow {
-  transition: box-shadow 0.3s ease-out;
-}
-.group:hover > .card-glow,
-a:hover .card-glow {
-  box-shadow:
-    6px 6px 0 0 var(--shadow),
-    0 0 25px 0 var(--card-glow, rgba(255, 182, 193, 0.6));
-}
-
-/* Hide the native cursor on devices with a fine pointer */
-@media (pointer: fine) {
-  * {
-    cursor: none !important;
-  }
-}
-
-/* Focus-visible: visible outline for keyboard navigation */
-*:focus-visible {
-  outline: 3px solid var(--accent, #ffc4e1);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-*:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* Pixel rendering: enforce crisp edges on all SVG/pixel containers */
-svg[style*='crisp-edges'],
-svg[style*='pixelated'] {
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  shape-rendering: crispEdges;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-blink,
-  .animate-cat-breathe,
-  .animate-pet-bounce,
-  .card-float,
-  .ring-spin {
-    animation: none !important;
-  }
-  /* Slow the marquee way down rather than freezing it entirely */
-  @keyframes marquee {
-    0% {
-      transform: translateX(0%);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-}
+html { scrollbar-width: none; } html::-webkit-scrollbar, body::-webkit-scrollbar { display:none; }
+@keyframes marquee { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+.lab-deck-track { animation: marquee 34s linear infinite; }
+.lab-deck-track:hover { animation-play-state: paused; }
+@keyframes eq { 0%,100% { transform:scaleY(.35); } 50% { transform:scaleY(1); } }
+@keyframes reel-spin { from { transform:rotate(0); } to { transform:rotate(360deg); } }
+.reel-spin { animation:reel-spin 1.4s linear infinite; }
+.ring-spin { animation:reel-spin 12s linear infinite; }
+@keyframes pet-bounce { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-5px) } }
+.animate-pet-bounce { animation:pet-bounce 2.8s ease-in-out infinite; }
+@media (pointer:fine) { * { cursor:none !important; } }
+*:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; } }
+.card-glow { transition:box-shadow .3s ease, transform .3s ease, border-color .3s ease; }
+a:hover .card-glow { box-shadow:0 0 32px var(--card-glow,rgba(185,167,255,.18)); border-color:rgba(255,255,255,.28)!important; }

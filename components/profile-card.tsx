@@ -42,11 +42,11 @@ export function ProfileCard({ status: override }: { status?: PresenceStatus } = 
       <div ref={cardRef} {...tilt}>
         <div
           ref={faceRef}
-          className="group relative overflow-hidden rounded-3xl border-4 p-7 text-left sm:p-8"
+          className="group relative overflow-hidden rounded-3xl border bg-white/[.035] p-7 text-left shadow-2xl shadow-black/20 sm:p-8"
           style={{
             background: 'var(--surface)',
             borderColor: 'var(--edge)',
-            boxShadow: '6px 6px 0 0 var(--shadow)',
+            boxShadow: '0 18px 60px rgba(0,0,0,.22)',
             transformStyle: 'preserve-3d',
           }}
         >

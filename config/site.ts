@@ -76,7 +76,7 @@ export const profile = {
   /** Drop a file at public/avatar.png; the card falls back to a monogram. */
   avatar: '/avatar.png',
   /** EDIT ME if you'd rather not show a timezone */
-  location: 'GMT-5',
+  location: 'NZST / GMT+12',
   email: 'lab@kittycats.cc',
 } as const
 
