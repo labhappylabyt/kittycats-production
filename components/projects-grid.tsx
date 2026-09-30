@@ -59,19 +59,19 @@ export async function ProjectsGrid() {
   const featured = projects.filter((p) => p.featured)
 
   return (
-    <div className="grid w-full max-w-4xl grid-cols-1 gap-5 sm:grid-cols-2">
+    <div className="grid w-full max-w-6xl grid-cols-1 gap-4 sm:grid-cols-12">
       {featured.map((project) => (
         <a
           key={project.title}
           href={project.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex flex-col justify-between rounded-3xl border-4 p-6 text-left transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 sm:col-span-2 sm:p-7"
+          className="group relative flex min-h-64 flex-col justify-between rounded-2xl border p-6 text-left transition-all duration-300 hover:-translate-y-1 sm:col-span-7 sm:p-7"
           style={{
-            background: project.color,
-            color: 'var(--ink)',
-            borderColor: 'var(--ink)',
-            boxShadow: '6px 6px 0 0 var(--shadow)',
+            background: 'linear-gradient(135deg, rgba(185,167,255,.16), rgba(255,255,255,.035))',
+            color: 'var(--foreground)',
+            borderColor: 'var(--edge)',
+            boxShadow: '0 18px 50px rgba(0,0,0,.18)',
           }}
         >
           <div className="flex items-start justify-between gap-4">
@@ -111,11 +111,11 @@ export async function ProjectsGrid() {
           href={repo.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex flex-col rounded-2xl border-4 p-5 text-left transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5"
+          className="group flex min-h-44 flex-col rounded-2xl border p-5 text-left transition-all duration-300 hover:-translate-y-1 sm:col-span-5"
           style={{
-            background: 'var(--surface)',
+            background: 'rgba(255,255,255,.035)',
             borderColor: 'var(--edge)',
-            boxShadow: '4px 4px 0 0 var(--shadow)',
+            boxShadow: 'none',
           }}
         >
           <div className="flex items-start justify-between gap-3">

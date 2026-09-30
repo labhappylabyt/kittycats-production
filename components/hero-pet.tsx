@@ -390,7 +390,7 @@ export function HeroPet() {
   }
 
   return (
-    <div className="flex w-full max-w-3xl flex-col items-center gap-6">
+    <div className="flex w-full flex-col items-center gap-5">
       {/* Live preview stage */}
       <div
         ref={stageRef}
