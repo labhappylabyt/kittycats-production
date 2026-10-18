@@ -10,10 +10,10 @@ import { playClick, playTick, resumeAudio } from './sfx'
 import { isMuted } from './sound-toggle'
 
 const STATUS: Record<PresenceStatus, { label: string; dot: string }> = {
-  online: { label: 'Online', dot: '#8ef0a8' },
-  idle: { label: 'Idle', dot: '#ffd166' },
-  dnd: { label: 'Do not disturb', dot: '#ff9a9a' },
-  offline: { label: 'Offline', dot: '#8b7fb8' },
+  online: { label: 'Online', dot: 'var(--pastel-mint)' },
+  idle: { label: 'Idle', dot: 'var(--pastel-peach)' },
+  dnd: { label: 'Do not disturb', dot: 'var(--pastel-coral)' },
+  offline: { label: 'Offline', dot: 'var(--muted-foreground)' },
 }
 
 export function ProfileCard({ status: override }: { status?: PresenceStatus } = {}) {
@@ -42,11 +42,11 @@ export function ProfileCard({ status: override }: { status?: PresenceStatus } = 
       <div ref={cardRef} {...tilt}>
         <div
           ref={faceRef}
-          className="group relative overflow-hidden rounded-3xl border bg-white/[.035] p-7 text-left shadow-2xl shadow-black/20 sm:p-8"
+          className="group relative overflow-hidden rounded-3xl border bg-white/[.035] p-7 text-left sm:p-8"
           style={{
             background: 'var(--surface)',
             borderColor: 'var(--edge)',
-            boxShadow: '0 18px 60px rgba(0,0,0,.22)',
+            boxShadow: '6px 6px 0 0 var(--shadow)',
             transformStyle: 'preserve-3d',
           }}
         >
@@ -176,7 +176,7 @@ export function ProfileCard({ status: override }: { status?: PresenceStatus } = 
                   <div className="truncate text-[12px] font-bold text-foreground">
                     {presence.spotify.song}
                   </div>
-                  <div className="truncate text-[11px] font-medium text-muted-foreground">
+                  <div className="truncate text-xs font-medium text-muted-foreground">
                     {presence.spotify.artist}
                   </div>
                   <div
@@ -219,7 +219,7 @@ export function ProfileCard({ status: override }: { status?: PresenceStatus } = 
                     {presence.activity.name}
                   </div>
                   {(presence.activity.details ?? presence.activity.state) && (
-                    <div className="truncate text-[11px] font-medium text-muted-foreground">
+                    <div className="truncate text-xs font-medium text-muted-foreground">
                       {presence.activity.details ?? presence.activity.state}
                     </div>
                   )}

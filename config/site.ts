@@ -16,7 +16,7 @@ export type Link = {
   handle: string
   href: string
   icon: IconKey
-  /** solid pastel face — ink text always sits on top of it */
+  /** pastel accent — a CSS custom property from globals.css, not a literal */
   color: string
   /** status badge text shown on hover */
   status?: string | null
@@ -30,8 +30,6 @@ export type Project = {
   href: string
   /** short status tag rendered as a sticker chip */
   status: string
-  /** pastel face — ink text sits on top */
-  color: string
   tags: string[]
   /** true = render as the wide featured card */
   featured?: boolean
@@ -88,7 +86,7 @@ export const links: Link[] = [
     handle: '@labhappylabyt',
     href: 'https://github.com/labhappylabyt',
     icon: 'github',
-    color: '#d7c9ff', // lavender
+    color: 'var(--pastel-lavender)',
     status: 'Active',
     meta: 'Repos, mods, and web toys',
   },
@@ -97,7 +95,7 @@ export const links: Link[] = [
     handle: '@labhappylabreal',
     href: 'https://discord.com/users/717979161502810153',
     icon: 'discord',
-    color: '#c4d4ff', // soft periwinkle
+    color: 'var(--pastel-periwinkle)',
     status: null, // filled live from presence
     meta: 'DMs open',
   },
@@ -106,7 +104,7 @@ export const links: Link[] = [
     handle: '@labhappylab',
     href: 'https://www.roblox.com/users/1532627925/profile',
     icon: 'roblox',
-    color: '#ffd0d0', // pastel coral
+    color: 'var(--pastel-coral)',
     status: null,
     meta: 'Profile',
   },
@@ -115,7 +113,7 @@ export const links: Link[] = [
     handle: 'Natiele',
     href: 'https://namemc.com/profile/Natiele.1',
     icon: 'namemc',
-    color: '#bdecd0', // mint green
+    color: 'var(--pastel-mint)',
     status: null,
     meta: 'Java + Bedrock',
   },
@@ -124,7 +122,7 @@ export const links: Link[] = [
     handle: 'lab@kittycats.cc',
     href: 'mailto:lab@kittycats.cc',
     icon: 'mail',
-    color: '#ffd7b0', // peach
+    color: 'var(--pastel-peach)',
     status: null,
     meta: null,
   },
@@ -139,7 +137,6 @@ export const projects: Project[] = [
       'A Minecraft client mod for 1.21.11 and the distribution stack behind it: Discord OAuth, per-user licenses bound to a hardware ID, and a signed, obfuscated build pipeline.',
     href: 'https://mochiontop.cc/',
     status: 'Live',
-    color: '#c4d4ff',
     tags: ['Cloudflare Workers', 'Neon Postgres', 'Discord OAuth', 'Fabric'],
     featured: true,
   },
@@ -223,18 +220,7 @@ export const presence = {
   },
 } as const
 
-/* ---------------------------------------------------------------- palette */
-
-/**
- * The pastel faces. Every one of these is light enough that ink (#2f2a44)
- * text sits on it — never put a pastel on a pastel, and never put --foreground
- * on one.
- */
-export const pastels = {
-  lavender: '#d7c9ff',
-  periwinkle: '#c4d4ff',
-  coral: '#ffd0d0',
-  mint: '#bdecd0',
-  pink: '#ffc4e1',
-  peach: '#ffd7b0',
-} as const
+/* The pastel palette lives in `app/globals.css` as `--pastel-*`, so there is
+   one source of truth. Reference those tokens (`var(--pastel-mint)`) rather
+   than writing hex here — a second copy is how the last palette refresh ended
+   up half-applied. */

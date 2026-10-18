@@ -2,18 +2,22 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --font-sans: var(--font-fredoka), ui-rounded, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-pixel: var(--font-pixel), monospace;
   --color-background: var(--background); --color-foreground: var(--foreground);
   --color-card: var(--card); --color-card-foreground: var(--card-foreground);
-  --color-muted-foreground: var(--muted-foreground); --color-border: var(--border);
+  --color-surface: var(--surface); --color-surface-2: var(--surface-2);
+  --color-edge: var(--edge); --color-ink: var(--ink);
+  --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
   --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground);
   --color-input: var(--input); --color-ring: var(--ring);
+  --color-pastel-lavender: var(--pastel-lavender); --color-pastel-periwinkle: var(--pastel-periwinkle);
+  --color-pastel-coral: var(--pastel-coral); --color-pastel-mint: var(--pastel-mint);
+  --color-pastel-pink: var(--pastel-pink); --color-pastel-peach: var(--pastel-peach);
   --radius-lg: 1rem; --radius-xl: 1.25rem; --radius-2xl: 1.5rem; --radius-3xl: 2rem;
 }
 
@@ -27,24 +31,44 @@
   --pastel-lavender: #b9a7ff; --pastel-periwinkle: #a7c7ff; --pastel-coral: #ff9eaa;
   --pastel-mint: #8ff0d0; --pastel-pink: #f3a8d2; --pastel-peach: #ffc38c;
 }
-.dark { color-scheme: dark; }
+
 @layer base {
-  * { @apply border-border outline-ring/50; }
-  html, body { margin:0; min-height:100%; overflow-x:hidden; }
+  * { @apply border-border; }
+  /* `clip` rather than `hidden`: it still contains the 3D-tilt overhang, but it
+     does not create a scroll container, so `position: sticky` keeps working. */
+  html, body { margin:0; min-height:100%; overflow-x:clip; }
   body { @apply bg-background text-foreground; background-image: radial-gradient(circle at 50% -10%, rgba(185,167,255,.14), transparent 38%), linear-gradient(180deg,#0b0c10 0%,#0d1016 100%); }
 }
+
 html { scrollbar-width: none; } html::-webkit-scrollbar, body::-webkit-scrollbar { display:none; }
+
 @keyframes marquee { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+/* Fade the track out at both ends with a mask rather than two opaque gradients,
+   so it works over the page's background gradient and needs no colour token. */
+.lab-deck { mask-image:linear-gradient(to right, transparent, black 4rem, black calc(100% - 4rem), transparent); }
 .lab-deck-track { animation: marquee 34s linear infinite; }
-.lab-deck-track:hover { animation-play-state: paused; }
+.lab-deck-track:hover, .lab-deck-track:focus-within { animation-play-state: paused; }
+
 @keyframes eq { 0%,100% { transform:scaleY(.35); } 50% { transform:scaleY(1); } }
 @keyframes reel-spin { from { transform:rotate(0); } to { transform:rotate(360deg); } }
 .reel-spin { animation:reel-spin 1.4s linear infinite; }
 .ring-spin { animation:reel-spin 12s linear infinite; }
 @keyframes pet-bounce { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-5px) } }
 .animate-pet-bounce { animation:pet-bounce 2.8s ease-in-out infinite; }
-@media (pointer:fine) { * { cursor:none !important; } }
+
+/* The native cursor is hidden only once PawCursor has mounted a replacement and
+   put this class on <html>. Without it, reduced-motion and no-JS visitors keep a
+   real pointer instead of losing the cursor entirely. */
+@media (pointer:fine) { html.paw-cursor-on, html.paw-cursor-on * { cursor:none !important; } }
+
 *:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
-@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; } }
+
+/* Stop the ambient loops, but leave transitions alone — a blanket 0.01ms kill
+   also removed the hover and press feedback that tells you a control is live. */
+@media (prefers-reduced-motion:reduce) {
+  .lab-deck { overflow-x:auto; }
+  .lab-deck-track, .reel-spin, .ring-spin, .animate-pet-bounce { animation:none; }
+}
+
 .card-glow { transition:box-shadow .3s ease, transform .3s ease, border-color .3s ease; }
 a:hover .card-glow { box-shadow:0 0 32px var(--card-glow,rgba(185,167,255,.18)); border-color:rgba(255,255,255,.28)!important; }

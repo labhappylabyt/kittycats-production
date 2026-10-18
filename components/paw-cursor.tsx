@@ -21,6 +21,10 @@ export function PawCursor() {
     const paw = pawRef.current
     if (!container || !paw) return
 
+    // Only now is there a replacement for the native pointer, so only now is it
+    // safe to hide it. globals.css keys `cursor:none` off this class.
+    document.documentElement.classList.add('paw-cursor-on')
+
     let mx = -100
     let my = -100
     let px = -100
@@ -66,7 +70,13 @@ export function PawCursor() {
       el.className = 'paw-sparkle pointer-events-none'
       el.style.left = `${x + (Math.random() * 12 - 6)}px`
       el.style.top = `${y + (Math.random() * 12 - 6)}px`
-      const colors = ['#ff9ecb', '#ffd166', '#bdecd0', '#c4d4ff', '#fff7c2']
+      const colors = [
+        'var(--pastel-pink)',
+        'var(--pastel-peach)',
+        'var(--pastel-mint)',
+        'var(--pastel-periwinkle)',
+        'var(--pastel-lavender)',
+      ]
       el.style.background = colors[Math.floor(Math.random() * colors.length)]
       el.style.setProperty('--rot', `${Math.random() * 360}deg`)
       container.appendChild(el)
@@ -85,13 +95,13 @@ export function PawCursor() {
     const updateCursor = () => {
       if (isDown) {
         paw.style.transform = 'translate(-50%, -50%) scale(0.7)'
-        paw.style.filter = 'drop-shadow(0 0 6px rgba(255, 158, 203, 0.8))'
+        paw.style.filter = 'drop-shadow(0 0 6px rgba(243, 168, 210, 0.8))'
       } else if (hoveringCard) {
         paw.style.transform = 'translate(-50%, -50%) scale(1.8)'
-        paw.style.filter = 'drop-shadow(0 0 10px rgba(255, 158, 203, 0.9))'
+        paw.style.filter = 'drop-shadow(0 0 10px rgba(243, 168, 210, 0.9))'
       } else {
         paw.style.transform = 'translate(-50%, -50%) scale(1)'
-        paw.style.filter = 'drop-shadow(0 0 4px rgba(255, 158, 203, 0.5))'
+        paw.style.filter = 'drop-shadow(0 0 4px rgba(243, 168, 210, 0.5))'
       }
     }
 
@@ -143,6 +153,7 @@ export function PawCursor() {
     raf = requestAnimationFrame(render)
 
     return () => {
+      document.documentElement.classList.remove('paw-cursor-on')
       cancelAnimationFrame(raf)
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mousedown', onDown)

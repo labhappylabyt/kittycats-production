@@ -55,7 +55,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'dark',
-  themeColor: '#16132b',
+  themeColor: '#0b0c10',
 }
 
 export default function RootLayout({
@@ -64,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`dark bg-background ${fredoka.variable} ${silkscreen.variable}`}>
+    <html lang="en" className={`bg-background ${fredoka.variable} ${silkscreen.variable}`}>
       <body className="relative antialiased font-sans">
         {children}
         <footer className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center pb-3">

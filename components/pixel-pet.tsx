@@ -26,7 +26,7 @@ export type Accessory =
   | 'fishTreat'
   | 'catnipBall'
 
-const INK = '#2f2a44'
+const INK = '#0b0c10'
 
 // 16 wide × 18 tall. Rows 0-1 reserved for hats. Cat occupies rows 2-17.
 // Center column = x 8. Every row is exactly 16 chars.

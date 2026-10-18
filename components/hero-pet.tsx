@@ -30,20 +30,20 @@ const EXPRESSIONS: { id: Expression; label: string }[] = [
 ]
 
 const CONFETTI_COLORS = [
-  '#ff9ecb',
-  '#ffd166',
-  '#bdecd0',
-  '#c4d4ff',
-  '#ffb877',
-  '#d7c9ff',
+  'var(--pastel-pink)',
+  'var(--pastel-peach)',
+  'var(--pastel-mint)',
+  'var(--pastel-periwinkle)',
+  'var(--pastel-coral)',
+  'var(--pastel-lavender)',
 ]
 
 const PURR_COLORS = [
-  '#ff9ecb',
-  '#ffd166',
-  '#bdecd0',
-  '#c4d4ff',
-  '#d7c9ff',
+  'var(--pastel-pink)',
+  'var(--pastel-peach)',
+  'var(--pastel-mint)',
+  'var(--pastel-periwinkle)',
+  'var(--pastel-lavender)',
 ]
 
 type PetState = 'idle' | 'tracking' | 'clicked'
@@ -410,7 +410,7 @@ export function HeroPet() {
             fur={fur}
             expression={expression}
             accessories={accessories}
-            className="h-44 w-44 drop-shadow-[4px_4px_0_0_#2f2a44] sm:h-52 sm:w-52"
+            className="h-44 w-44 drop-shadow-[4px_4px_0_0_var(--shadow)] sm:h-52 sm:w-52"
             onPetClick={handlePetClick}
           />
         </div>
@@ -418,7 +418,7 @@ export function HeroPet() {
 
       {/* Toast notification */}
       <div
-        className={`pointer-events-none fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-2xl border-4 bg-accent px-6 py-3 text-base font-bold text-foreground shadow-[5px_5px_0_0_var(--ink)] transition-all duration-300 ${
+        className={`pointer-events-none fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-2xl border-4 bg-accent px-6 py-3 text-base font-bold text-accent-foreground shadow-[5px_5px_0_0_var(--shadow)] transition-all duration-300 ${
           toast ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
         }`}
         style={{ borderColor: 'var(--ink)' }}
@@ -440,7 +440,7 @@ export function HeroPet() {
                 aria-pressed={fur.id === f.id}
                 className={`flex items-center gap-2 rounded-xl border-2 px-2.5 py-1.5 text-xs font-bold transition-transform duration-150 hover:-translate-y-0.5 ${
                   fur.id === f.id
-                    ? 'border-foreground bg-card shadow-[2px_2px_0_0_var(--ink)]'
+                    ? 'border-foreground bg-card shadow-[2px_2px_0_0_var(--shadow)]'
                     : 'border-transparent'
                 }`}
               >
@@ -464,7 +464,7 @@ export function HeroPet() {
                 aria-pressed={expression === e.id}
                 className={`rounded-xl border-2 px-3 py-1.5 text-xs font-bold transition-transform duration-150 hover:-translate-y-0.5 ${
                   expression === e.id
-                    ? 'border-foreground bg-card shadow-[2px_2px_0_0_var(--ink)]'
+                    ? 'border-foreground bg-card shadow-[2px_2px_0_0_var(--shadow)]'
                     : 'border-transparent'
                 }`}
               >
@@ -484,7 +484,7 @@ export function HeroPet() {
                 aria-pressed={accessories.has(a.id)}
                 className={`flex items-center gap-1 rounded-xl border-2 px-2.5 py-1.5 text-xs font-bold transition-transform duration-150 hover:-translate-y-0.5 ${
                   accessories.has(a.id)
-                    ? 'border-foreground bg-card shadow-[2px_2px_0_0_var(--ink)]'
+                    ? 'border-foreground bg-card shadow-[2px_2px_0_0_var(--shadow)]'
                     : 'border-transparent'
                 }`}
               >
@@ -500,7 +500,7 @@ export function HeroPet() {
       <button
         type="button"
         onClick={adopt}
-        className="group relative inline-flex items-center gap-2 rounded-2xl border-4 bg-accent px-8 py-3 text-base font-bold text-foreground shadow-[5px_5px_0_0_var(--ink)] transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[7px_7px_0_0_var(--ink)] active:translate-x-0 active:translate-y-0 active:shadow-[3px_3px_0_0_var(--ink)]"
+        className="group relative inline-flex items-center gap-2 rounded-2xl border-4 bg-accent px-8 py-3 text-base font-bold text-accent-foreground shadow-[5px_5px_0_0_var(--shadow)] transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[7px_7px_0_0_var(--shadow)] active:translate-x-0 active:translate-y-0 active:shadow-[3px_3px_0_0_var(--shadow)]"
         style={{ borderColor: 'var(--ink)' }}
       >
         <span className="transition-transform duration-200 group-hover:scale-110">
@@ -512,7 +512,7 @@ export function HeroPet() {
           className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-200 group-hover:opacity-100"
           style={{
             boxShadow:
-              '0 0 24px 4px rgba(255, 196, 225, 0.7), 0 0 48px 8px rgba(255, 196, 225, 0.4)',
+              '0 0 24px 4px color-mix(in srgb, var(--pastel-pink) 70%, transparent), 0 0 48px 8px color-mix(in srgb, var(--pastel-pink) 40%, transparent)',
           }}
         />
       </button>

@@ -14,12 +14,12 @@ type Particle = {
 }
 
 const COLORS = [
-  '#ffc4e1',
-  '#bdecd0',
-  '#c4d4ff',
-  '#ffd7b0',
-  '#d7c9ff',
-  '#fff7c2',
+  '#f3a8d2',
+  '#8ff0d0',
+  '#a7c7ff',
+  '#ffc38c',
+  '#b9a7ff',
+  '#ff9eaa',
 ]
 
 export function AmbientCanvas() {
@@ -63,9 +63,9 @@ export function AmbientCanvas() {
       }))
 
       glows = [
-        { x: w * 0.2, y: h * 0.3, r: 200, color: '#ffc4e1', phase: 0 },
-        { x: w * 0.8, y: h * 0.7, r: 250, color: '#c4d4ff', phase: Math.PI },
-        { x: w * 0.5, y: h * 0.5, r: 180, color: '#bdecd0', phase: Math.PI / 2 },
+        { x: w * 0.2, y: h * 0.3, r: 200, color: '#f3a8d2', phase: 0 },
+        { x: w * 0.8, y: h * 0.7, r: 250, color: '#a7c7ff', phase: Math.PI },
+        { x: w * 0.5, y: h * 0.5, r: 180, color: '#8ff0d0', phase: Math.PI / 2 },
       ]
     }
 

@@ -47,7 +47,7 @@ export function AudioPlayer() {
       >
         <div className="flex items-center gap-3">
           <span
-            className="shrink-0 rounded-full border-2 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em]"
+            className="shrink-0 rounded-full border-2 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.15em]"
             style={{ borderColor: 'var(--edge)', color: 'var(--muted-foreground)' }}
           >
             {player.playing ? 'Now playing' : 'Paused'}
@@ -64,7 +64,7 @@ export function AudioPlayer() {
             </span>
 
             {overflows ? (
-              <div className="flex w-max animate-[marquee_12s_linear_infinite]">
+              <div className="flex w-max animate-[marquee_12s_linear_infinite] motion-reduce:animate-none">
                 <span className="pr-10 font-pixel text-sm text-foreground">{title}</span>
                 <span aria-hidden="true" className="pr-10 font-pixel text-sm text-foreground">
                   {title}
@@ -75,14 +75,14 @@ export function AudioPlayer() {
             )}
           </div>
 
-          <span className="hidden shrink-0 text-[11px] font-semibold text-muted-foreground sm:block">
+          <span className="hidden shrink-0 text-xs font-semibold text-muted-foreground sm:block">
             {player.track.artist}
           </span>
         </div>
 
         <div
           className="relative mt-5 h-28 overflow-hidden rounded-2xl border-2 sm:h-32"
-          style={{ borderColor: 'var(--edge)', background: 'var(--ground)' }}
+          style={{ borderColor: 'var(--edge)', background: 'var(--background)' }}
         >
           <canvas ref={canvasRef} className="block h-full w-full" aria-hidden="true" />
         </div>

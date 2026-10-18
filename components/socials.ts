@@ -14,17 +14,13 @@ export type Social = {
   handle: string
   href: string
   Icon: ComponentType<SVGProps<SVGSVGElement>>
-  /** solid pastel fill used as the card face */
+  /** pastel accent — the icon colour and the hover glow */
   color: string
-  /** dark ink used for the outline, icon, and text */
-  ink: string
   /** status badge text shown on the card (null = no badge) */
   status?: string | null
   /** preview metadata shown in the hover drawer */
   meta?: string | null
 }
-
-const INK = '#2f2a44'
 
 const ICONS: Record<IconKey, ComponentType<SVGProps<SVGSVGElement>>> = {
   github: GitHubIcon,
@@ -44,7 +40,6 @@ export const socials: Social[] = links.map((link) => ({
   href: link.href,
   Icon: ICONS[link.icon],
   color: link.color,
-  ink: INK,
   status: link.status,
   meta: link.meta,
 }))

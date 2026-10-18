@@ -71,14 +71,14 @@ export async function ProjectsGrid() {
             background: 'linear-gradient(135deg, rgba(185,167,255,.16), rgba(255,255,255,.035))',
             color: 'var(--foreground)',
             borderColor: 'var(--edge)',
-            boxShadow: '0 18px 50px rgba(0,0,0,.18)',
+            boxShadow: '6px 6px 0 0 var(--shadow)',
           }}
         >
           <div className="flex items-start justify-between gap-4">
             <h3 className="font-pixel text-xl leading-tight sm:text-2xl">{project.title}</h3>
             <span
-              className="shrink-0 rounded-full border-2 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em]"
-              style={{ borderColor: 'var(--ink)' }}
+              className="shrink-0 rounded-full border-2 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.15em]"
+              style={{ borderColor: 'var(--edge)' }}
             >
               {project.status}
             </span>
@@ -93,7 +93,7 @@ export async function ProjectsGrid() {
               <span
                 key={tag}
                 className="rounded-lg border-2 px-2 py-0.5 text-[11px] font-bold"
-                style={{ borderColor: 'var(--ink)' }}
+                style={{ borderColor: 'var(--edge)' }}
               >
                 {tag}
               </span>
@@ -132,7 +132,7 @@ export async function ProjectsGrid() {
             {repo.description ?? 'No description yet.'}
           </p>
 
-          <div className="mt-4 flex items-center gap-3 text-[11px] font-semibold text-muted-foreground">
+          <div className="mt-4 flex items-center gap-3 text-xs font-semibold text-muted-foreground">
             {repo.language && (
               <span className="inline-flex items-center gap-1.5">
                 <span
